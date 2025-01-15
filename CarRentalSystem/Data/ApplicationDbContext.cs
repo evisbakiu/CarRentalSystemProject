@@ -11,10 +11,11 @@ namespace CarRentalSystem.Data
         {
         }
 
-        public DbSet<Car>? Cars { get; set; }
-        public DbSet<Reservation>? Reservations { get; set; }
-        public DbSet<Category>? Categories { get; set; }
-        public DbSet<Report>? Reports { get; set; }
-        public DbSet<Status>? Statuses { get; set; }
+        public DbSet<Car>? Car { get; set; }
+        public DbSet<Reservation>? Reservation { get; set; }
+        public DbSet<Category>? Category { get; set; }
+        public DbSet<Report>? Report { get; set; }
+        public DbSet<Status>? Status { get; set; }
+        public DbSet<Payment>? Payment { get; set; }
     }
 }

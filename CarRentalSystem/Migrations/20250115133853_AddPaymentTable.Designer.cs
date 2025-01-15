@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRentalSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250115125314_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250115133853_AddPaymentTable")]
+    partial class AddPaymentTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,7 +55,7 @@ namespace CarRentalSystem.Migrations
 
                     b.HasIndex("CategoryId1");
 
-                    b.ToTable("Cars");
+                    b.ToTable("Car");
                 });
 
             modelBuilder.Entity("CarRentalSystem.Models.Category", b =>
@@ -69,7 +69,32 @@ namespace CarRentalSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("CarRentalSystem.Models.Payment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ReservationId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ReservationId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReservationId1");
+
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("CarRentalSystem.Models.Report", b =>
@@ -94,7 +119,7 @@ namespace CarRentalSystem.Migrations
 
                     b.HasIndex("UserId1");
 
-                    b.ToTable("Reports");
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("CarRentalSystem.Models.Reservation", b =>
@@ -138,7 +163,7 @@ namespace CarRentalSystem.Migrations
 
                     b.HasIndex("UserId1");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Reservation");
                 });
 
             modelBuilder.Entity("CarRentalSystem.Models.Status", b =>
@@ -152,7 +177,7 @@ namespace CarRentalSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("Status");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -387,8 +412,8 @@ namespace CarRentalSystem.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("User");
                 });
@@ -400,6 +425,15 @@ namespace CarRentalSystem.Migrations
                         .HasForeignKey("CategoryId1");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("CarRentalSystem.Models.Payment", b =>
+                {
+                    b.HasOne("CarRentalSystem.Models.Reservation", "Reservation")
+                        .WithMany()
+                        .HasForeignKey("ReservationId1");
+
+                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("CarRentalSystem.Models.Report", b =>

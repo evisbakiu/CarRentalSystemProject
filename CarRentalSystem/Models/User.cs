@@ -4,7 +4,7 @@ namespace CarRentalSystem.Models
 {
     public class User : IdentityUser
     {
-        public string? Username { get; set; }
+        public int Age { get; set; }
 
 
         public ICollection<Role>? Roles { get; set; }
