@@ -2,14 +2,19 @@
     ViewBag.Title = "Register";
 }
 
-<h2>Register</h2>
+<h2>Register as a Client</h2>
 
 <form asp-action="Register" method="post">
-    <label>Email:</label>
-    <input type="email" name="email" required /><br />
+    <div class="mb-3">
+        <label>Email:</label>
+        <input type="email" name="email" class="form-control" required />
+    </div>
 
-    <label>Password:</label>
-    <input type="password" name="password" required /><br />
+    <div class="mb-3">
+        <label>Password:</label>
+        <input type="password" name="password" class="form-control" required />
+        <small>Password must be at least 8 characters, include uppercase, a number, and a special character.</small>
+    </div>
 
-    <button type="submit">Register</button>
+    <button type="submit" class="btn btn-success">Register</button>
 </form>

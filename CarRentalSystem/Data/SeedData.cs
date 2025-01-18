@@ -8,8 +8,8 @@ namespace CarRentalSystem.Data
     {
         public static async Task SeedDataForTheSystem(IServiceProvider serviceProvider)
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
             // 1. Seed Roles
@@ -19,7 +19,7 @@ namespace CarRentalSystem.Data
             {
                 if (!await roleManager.RoleExistsAsync(roleName))
                 {
-                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                    await roleManager.CreateAsync(new Role(roleName));
                 }
             }
 
@@ -31,7 +31,7 @@ namespace CarRentalSystem.Data
 
             if (adminUser == null)
             {
-                var newAdmin = new IdentityUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
+                var newAdmin = new User { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
                 var createAdminResult = await userManager.CreateAsync(newAdmin, adminPassword);
 
                 if (createAdminResult.Succeeded)
@@ -65,6 +65,21 @@ namespace CarRentalSystem.Data
                 if (!context.Category.Any(c => c.Name == category.Name))
                 {
                     context.Category.Add(category);
+                }
+            }
+
+            var statuses = new List<Status>
+            {
+                new Status { Name = "Pending" },
+                new Status { Name = "Confirmed" },
+                new Status { Name = "Canceled" }
+            };
+
+            foreach (var status in statuses)
+            {
+                if (!context.Status.Any(s => s.Name == status.Name))
+                {
+                    context.Status.Add(status);
                 }
             }
 

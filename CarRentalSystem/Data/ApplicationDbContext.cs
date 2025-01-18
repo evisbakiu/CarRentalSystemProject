@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarRentalSystem.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+    public class ApplicationDbContext : IdentityDbContext<User, Role, string>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

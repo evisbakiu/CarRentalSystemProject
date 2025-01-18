@@ -4,9 +4,9 @@ namespace CarRentalSystem.Models
 {
     public class Role : IdentityRole
     {
-        public string? Code { get; set; }
+        public Role() : base() { }
 
-        public Guid UserId { get; set; }
-        public User? User { get; set; }
+        public Role(string roleName) : base(roleName) { }
+        public string? Code { get; set; }
     }
 }

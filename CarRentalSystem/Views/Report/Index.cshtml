@@ -1,0 +1,23 @@
+﻿@model IEnumerable<CarRentalSystem.Models.Report>
+
+<h2>Generated Reports</h2>
+
+<a asp-action="Generate" class="btn btn-primary">Generate New Report</a>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Date Generated</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var report in Model)
+        {
+            <tr>
+                <td>@report.DateGenerated.ToShortDateString()</td>
+                <td>@report.ReportDetails</td>
+            </tr>
+        }
+    </tbody>
+</table>

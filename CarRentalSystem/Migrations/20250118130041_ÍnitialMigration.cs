@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CarRentalSystem.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class ÍnitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,8 +14,7 @@ namespace CarRentalSystem.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: true),
+                    Age = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -65,9 +64,8 @@ namespace CarRentalSystem.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -241,8 +239,7 @@ namespace CarRentalSystem.Migrations
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CarId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -250,8 +247,8 @@ namespace CarRentalSystem.Migrations
                 {
                     table.PrimaryKey("PK_Reservation", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservation_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Reservation_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -358,9 +355,9 @@ namespace CarRentalSystem.Migrations
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservation_UserId1",
+                name: "IX_Reservation_UserId",
                 table: "Reservation",
-                column: "UserId1");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

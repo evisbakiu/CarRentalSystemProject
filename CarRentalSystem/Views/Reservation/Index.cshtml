@@ -1,0 +1,31 @@
+﻿@model IEnumerable<CarRentalSystem.Models.Reservation>
+
+<h2>Manage Reservations</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Car</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reservation in Model)
+        {
+            <tr>
+                <td>@reservation!.User!.UserName</td>
+                <td>@reservation!.Car!.Name</td>
+                <td>@reservation.StartDate.ToShortDateString()</td>
+                <td>@reservation.EndDate.ToShortDateString()</td>
+                <td>@reservation!.Status!.Name</td>
+                <td>
+                    <a asp-action="Cancel" asp-route-id="@reservation.Id" class="btn btn-danger">Cancel</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

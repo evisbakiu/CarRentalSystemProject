@@ -1,4 +1,7 @@
 using CarRentalSystem.Data;
+using CarRentalSystem.Models;
+using CarRentalSystem.Services.Interfaces;
+using CarRentalSystem.Services.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,9 +12,16 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddIdentity<User, Role>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;  
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IPasswordValidator<User>, PasswordValidator<User>>();
+
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

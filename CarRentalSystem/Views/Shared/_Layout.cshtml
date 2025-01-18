@@ -25,20 +25,29 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" asp-controller="Car" asp-action="Index">Manage Cars</a></li>
-                            <li><a class="dropdown-item" asp-controller="Admin" asp-action="Reservations">Manage Reservations</a></li>
-                            <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users">Manage Users</a></li>
-                            <li><a class="dropdown-item" asp-controller="Admin" asp-action="Reports">Generate Reports</a></li>
+                            <li><a class="dropdown-item" asp-controller="Reservation" asp-action="Index">Manage Reservations</a></li>
+                            <li><a class="dropdown-item" asp-controller="User" asp-action="Index">Manage Users</a></li>
+                            <li><a class="dropdown-item" asp-controller="Report" asp-action="Index">Generate Reports</a></li>
                         </ul>
                     </li>
                     <partial name="_LoginPartial" />
-                } else {
+                }
+                else
+                {
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="Index">Home</a>
+                            </li>
+                            <li><a class="nav-item" href="@Url.Action("Index", "Car")">Cars</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Cmimet</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Terms of service</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">Kontakto</a>
                             </li>
                         </ul>
                         <partial name="_LoginPartial" />

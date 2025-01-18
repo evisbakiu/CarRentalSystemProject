@@ -5,11 +5,30 @@
 <h2>Login</h2>
 
 <form asp-action="Login" method="post">
-    <label>Email:</label>
-    <input type="email" name="email" required /><br />
+    <div class="mb-3">
+        <label>Email:</label>
+        <input type="email" name="email" class="form-control" required />
+    </div>
 
-    <label>Password:</label>
-    <input type="password" name="password" required /><br />
+    <div class="mb-3">
+        <label>Password:</label>
+        <input type="password" name="password" class="form-control" required />
+    </div>
+    <p>
+        Didn't receive the email?
+        <a asp-action="ResendConfirmationEmail" asp-route-email="">Resend Confirmation Email</a>
+    </p>
 
-    <button type="submit">Login</button>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger mt-2">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        </div>
+    }
 </form>

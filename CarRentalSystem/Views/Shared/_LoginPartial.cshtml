@@ -1,19 +1,20 @@
-﻿@using System.Security.Principal
-
-<ul class="navbar-nav">
+﻿<ul class="navbar-nav">
     @if (User.Identity?.IsAuthenticated == true)
     {
         <span class="navbar-text text-dark">Hello @User.Identity?.Name!</span>
         <li class="nav-item">
             <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
-                <button type="submit" class="nav-link btn btn-link text-dark" style="padding: 0;">Sign out</button>
+                <button type="submit" class="btn btn-link text-dark">Sign Out</button>
             </form>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Sign in</a>
+            <a class="btn btn-outline-primary me-2" asp-controller="Account" asp-action="Login">Sign In</a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-success" asp-controller="Account" asp-action="Register">Register</a>
         </li>
     }
 </ul>

@@ -11,9 +11,9 @@ namespace CarRentalSystem.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public AdminController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public AdminController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
             _userManager = userManager;

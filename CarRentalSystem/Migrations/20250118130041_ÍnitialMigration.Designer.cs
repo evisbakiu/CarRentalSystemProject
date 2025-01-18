@@ -4,6 +4,7 @@ using CarRentalSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRentalSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250118130041_ÍnitialMigration")]
+    partial class ÍnitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,7 +177,10 @@ namespace CarRentalSystem.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("UserId")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -185,7 +190,7 @@ namespace CarRentalSystem.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -434,9 +439,11 @@ namespace CarRentalSystem.Migrations
 
             modelBuilder.Entity("CarRentalSystem.Models.Role", b =>
                 {
-                    b.HasOne("CarRentalSystem.Models.User", null)
+                    b.HasOne("CarRentalSystem.Models.User", "User")
                         .WithMany("Roles")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

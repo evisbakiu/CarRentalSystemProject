@@ -18,14 +18,24 @@ namespace CarRentalSystem.Controllers
 
         public IActionResult Index()
         {
-            var cars = _context.Car.Include(c => c.Category).ToList();
+            var cars = _context!.Car!.Include(c => c.Category).ToList();
             return View(cars);
         }
 
         public IActionResult AddCar()
         {
-            ViewBag.Categories = _context.Category.ToList();
+            ViewBag.Categories = _context!.Category!.ToList();
             return View();
+        }
+
+        public IActionResult Book(Guid id)
+        {
+            var car = _context.Car.FirstOrDefault(c => c.Id == id);
+            if (car == null)
+            {
+                return NotFound();
+            }
+            return View(car);
         }
 
         [HttpPost]
@@ -44,7 +54,7 @@ namespace CarRentalSystem.Controllers
                 car.ImagePath = "/images/cars/" + imageFile.FileName;
             }
 
-            _context.Car.Add(car);
+            _context!.Car!.Add(car);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -52,28 +62,27 @@ namespace CarRentalSystem.Controllers
         [HttpGet]
         public IActionResult EditCar(Guid id)
         {
-            var car = _context.Car.Find(id);
+            var car = _context!.Car!.Find(id);
             if (car == null) return NotFound();
 
-            ViewBag.Categories = _context.Category.ToList();
+            ViewBag.Categories = _context!.Category!.ToList();
             return View(car);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> EditCar(Car car)
         {
-            _context.Car.Update(car);
+            _context!.Car!.Update(car);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> DeleteCar(Guid id)
         {
-            var car = await _context.Car.FindAsync(id);
+            var car = await _context!.Car!.FindAsync(id);
             if (car != null)
             {
-                _context.Car.Remove(car);
+                _context!.Car!.Remove(car);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction("Index");

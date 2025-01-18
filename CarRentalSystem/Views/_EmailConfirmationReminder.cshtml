@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Identity
+@if (User.Identity.IsAuthenticated)
+{
+    @inject UserManager<User> UserManager
+    var user = await UserManager.GetUserAsync(User);
+
+    if (user != null && !await UserManager.IsEmailConfirmedAsync(user))
+    {
+        <div class="alert alert-warning text-center">
+            Please confirm your email. Check your inbox or
+            <a asp-action="ResendConfirmationEmail" asp-controller="Account">click here</a> to resend the confirmation email.
+        </div>
+    }
+}
