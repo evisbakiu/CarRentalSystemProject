@@ -1,35 +1,45 @@
-﻿using System.Diagnostics;
+﻿using CarRentalSystem.Data;
 using CarRentalSystem.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace CarRentalSystem.Controllers
+public class HomeController : Controller
 {
-    [Authorize]
-    public class HomeController : Controller
+    private readonly ApplicationDbContext _context;
+
+    public HomeController(ApplicationDbContext context)
     {
-        private readonly ILogger<HomeController> _logger;
+        _context = context;
+    }
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+    // GET: Homepage with search form
+    public IActionResult Index()
+    {
+        return View();
+    }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+    // POST: Search for available cars
+    [HttpPost]
+    public IActionResult Search(DateTime pickUpDate, DateTime dropOffDate)
+    {
+        var availableCars = _context.Car
+            .Where(car => !_context.Reservation
+                .Any(reservation =>
+                    reservation.CarId == car.Id &&
+                    ((pickUpDate >= reservation.StartDate && pickUpDate <= reservation.EndDate) ||
+                     (dropOffDate >= reservation.StartDate && dropOffDate <= reservation.EndDate))))
+            .Include(car => car.Category)
+            .ToList();
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        return View("SearchResults", availableCars);
+    }
 
-        [AllowAnonymous]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+    // GET: Show details of a car
+    public IActionResult Details(Guid id)
+    {
+        var car = _context.Car.Include(c => c.Category).FirstOrDefault(c => c.Id == id);
+        if (car == null) return NotFound();
+
+        return View(car);
     }
 }

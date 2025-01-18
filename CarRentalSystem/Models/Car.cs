@@ -7,8 +7,9 @@
         public int Year { get; set; }
         public decimal PricePerDay { get; set; }
         public bool IsAvailable { get; set; }
+        public string? ImagePath { get; set; }
 
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public Category? Category { get; set; }
 
     }
