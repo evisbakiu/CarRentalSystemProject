@@ -3,6 +3,7 @@
     public class Reservation : BaseEntity
     {
         public DateTime StartDate { get; set; }
+
         public DateTime EndDate { get; set; }
         public decimal TotalCost { get; set; }
 
