@@ -1,0 +1,23 @@
+﻿@model IEnumerable<CarRentalSystem.Models.Report>
+
+<h2>Reports</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date Generated</th>
+            <th>User</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var report in Model)
+        {
+            <tr>
+                <td>@report.DateGenerated.ToShortDateString()</td>
+                <td>@report.User.UserName</td>
+                <td>@report.ReportDetails</td>
+            </tr>
+        }
+    </tbody>
+</table>

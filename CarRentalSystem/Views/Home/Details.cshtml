@@ -1,0 +1,19 @@
+﻿@model CarRentalSystem.Models.Car
+
+<h2>@Model.Name Details</h2>
+
+<img src="@Model.ImagePath" alt="@Model.Name" style="width:400px; height:300px;" />
+
+<p>License Plate: @Model.LicensePlate</p>
+<p>Year: @Model.Year</p>
+<p>Price Per Day: $@Model.PricePerDay</p>
+<p>Category: @Model.Category?.Name</p>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <a asp-controller="Reservation" asp-action="Book" asp-route-id="@Model.Id" class="btn btn-success">Book Now</a>
+}
+else
+{
+    <a asp-controller="Account" asp-action="Register" class="btn btn-warning">Register to Book</a>
+}

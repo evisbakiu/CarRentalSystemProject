@@ -1,8 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewBag.Title = "Car Search";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Search for Available Cars</h2>
+
+<form asp-action="Search" method="post">
+    <label>Pick-up Date:</label>
+    <input type="date" name="pickUpDate" required />
+
+    <label>Drop-off Date:</label>
+    <input type="date" name="dropOffDate" required />
+
+    <button type="submit">Search</button>
+</form>

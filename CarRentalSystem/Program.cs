@@ -25,7 +25,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await SeedData.SeedRolesAndAdmin(services);
+    await SeedData.SeedDataForTheSystem(services);
 }
 
 if (!app.Environment.IsDevelopment())
@@ -45,5 +45,6 @@ app.UseAuthorization();   // Enable authorization
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();
