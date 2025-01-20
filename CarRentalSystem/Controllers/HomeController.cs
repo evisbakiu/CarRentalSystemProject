@@ -12,13 +12,27 @@ public class HomeController : Controller
         _context = context;
     }
 
-    // GET: Homepage with search form
     public IActionResult Index()
+    {
+        var cars = _context.Car.ToList(); 
+        return View(cars);
+    }    
+    
+    public IActionResult Terms()
     {
         return View();
     }
 
-    // POST: Search for available cars
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    public IActionResult Contact()
+    {
+        return View();
+    }
+
     [HttpPost]
     public IActionResult Search(DateTime pickUpDate, DateTime dropOffDate)
     {
@@ -34,7 +48,6 @@ public class HomeController : Controller
         return View("SearchResults", availableCars);
     }
 
-    // GET: Show details of a car
     public IActionResult Details(Guid id)
     {
         var car = _context.Car.Include(c => c.Category).FirstOrDefault(c => c.Id == id);

@@ -1,12 +1,15 @@
 ﻿@model CarRentalSystem.Models.Car
 
-<div class="container mt-4">
-    <div class="row">
+<div class="container py-5">
+    <div class="row mb-4">
+        <!-- Car Image -->
         <div class="col-md-6">
-            <img src="@Model.ImagePath" alt="@Model.Name" class="img-fluid mb-3">
+            <img src="@Model.ImagePath" alt="@Model.Name" class="img-fluid rounded shadow-sm">
         </div>
+
+        <!-- Car Details -->
         <div class="col-md-6">
-            <h2>@Model.Name</h2>
+            <h2 class="text-primary">@Model.Name</h2>
             <p><strong>Class:</strong> @Model.Class?.Name</p>
             <p><strong>Fuel:</strong> @Model.FuelType</p>
             <p><strong>Gearbox:</strong> @Model.Gearbox</p>
@@ -18,61 +21,81 @@
 
     <hr />
 
-    <div class="mt-3">
-        <h4>Additional Information</h4>
-        <div class="row">
-            <div class="col-md-6">
-                <ul>
-                    @foreach (var feature in Model.Features)
-                    {
-                        <li>✔ @feature.Name</li>
-                    }
-                </ul>
-            </div>
-        </div>
+    <!-- Additional Features -->
+    <div class="mb-4">
+        <h4 class="text-primary">Additional Features</h4>
+        <ul class="list-group">
+            @foreach (var feature in Model.Features)
+            {
+                <li class="list-group-item d-flex align-items-center">
+                    <span class="badge bg-success me-2">✔</span> @feature.Name
+                </li>
+            }
+        </ul>
     </div>
 
     <hr />
 
-    <div class="mt-3">
-        <h4>Pickup & Return</h4>
+    <!-- Pickup & Return -->
+    <div>
+        <h4 class="text-primary">Pickup & Return</h4>
         <form method="get" asp-action="ReviewReservation" asp-controller="Reservation">
             <input type="hidden" name="CarId" value="@Model.Id" />
             <input type="hidden" name="ReturnLocation" value="Tirana International Airport (TIA), Tirana, Albania 1001" />
-            <input type="text" id="ReturnLocation" name="ReturnLocation" class="form-control" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
+
+            <div class="mb-3">
+                <label for="ReturnLocation" class="form-label">Return Location</label>
+                <input type="text" id="ReturnLocation" name="ReturnLocation" class="form-control" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
+            </div>
 
             <div class="row">
                 <div class="col-md-6">
-                    <label for="PickUpDateTime">Pick-Up Date & Time</label>
+                    <label for="PickUpDateTime" class="form-label">Pick-Up Date & Time</label>
                     <input type="datetime-local" id="PickUpDateTime" name="PickUpDateTime" class="form-control" required />
                 </div>
                 <div class="col-md-6">
-                    <label for="ReturnDateTime">Return Date & Time</label>
+                    <label for="ReturnDateTime" class="form-label">Return Date & Time</label>
                     <input type="datetime-local" id="ReturnDateTime" name="ReturnDateTime" class="form-control" required />
                 </div>
             </div>
 
             <div class="mt-4 text-end">
-                <button type="submit" class="btn btn-primary">Continue</button>
+                <button type="submit" class="btn btn-orange">Continue</button>
             </div>
         </form>
     </div>
+
+    <!-- Spacer after button -->
+    <div class="mt-5"></div>
 </div>
+
 <style>
+    /* Image Styling */
     img {
         border-radius: 10px;
     }
 
-/*     ul li:before {
-        content: "✔";
-        color: green;
-        margin-right: 5px;
-    } */
+    /* Features List */
+    .list-group-item {
+        background-color: #f8f9fa;
+        border: none;
+        font-size: 1rem;
+    }
 
-    .btn-primary {
-        background-color: #ffc107;
-        border-color: #ffc107;
-        color: black;
+    /* Highlight features badge */
+    .badge.bg-success {
+        font-size: 0.9rem;
+    }
+
+    /* Buttons */
+    .btn-orange {
+        background-color: #FFA500;
+        border: none;
+        color: white;
         font-weight: bold;
     }
+
+        .btn-orange:hover {
+            background-color: #FF8C00;
+        }
 </style>

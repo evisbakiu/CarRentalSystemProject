@@ -29,6 +29,28 @@
 
             await smtpClient.SendMailAsync(mailMessage);
         }
+
+        public async Task SendEmailContactAsync(string email, string subject, string htmlMessage)
+        {
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("evis.bakiu12@gmail.com", "lkbumsxvkjywjpvj"),
+                EnableSsl = true,
+            };
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(email),
+                Subject = subject,
+                Body = htmlMessage,
+                IsBodyHtml = true,
+            };
+
+            mailMessage.To.Add("evis.bakiu12@gmail.com");
+
+            await smtpClient.SendMailAsync(mailMessage);
+        }
     }
 
 

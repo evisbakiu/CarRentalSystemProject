@@ -1,21 +1,139 @@
 ﻿@{
-    ViewBag.Title = "Car Search";
+    ViewData["Title"] = "Home";
 }
 
-<h2>Search for Available Cars</h2>
+<!-- Full Width Search Form -->
+<div class="container-fluid py-5" style="background-color: #F8F9FA;">
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3 text-dark">Compare Car Rental & Save!</h1>
+        <p class="lead text-muted">Find the best deals from top rental companies all in one place.</p>
+        <form class="row g-4 justify-content-center" asp-action="Search" asp-controller="Home" method="post">
+            <div class="col-md-3">
+                <label for="PickUpLocation" class="form-label text-dark">Pick-Up Location</label>
+                <input type="text" id="PickUpLocation" name="PickUpLocation" class="form-control form-control-lg" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
+            </div>
+            <div class="col-md-3">
+                <label for="pickUpDate" class="form-label text-dark">Pick-Up Date</label>
+                <input type="datetime-local" id="pickUpDate" name="pickUpDate" class="form-control form-control-lg" required />
+            </div>
+            <div class="col-md-3">
+                <label for="dropOffDate" class="form-label text-dark">Drop-Off Date</label>
+                <input type="datetime-local" id="dropOffDate" name="dropOffDate" class="form-control form-control-lg" required />
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn w-100 btn-orange btn-lg">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
-<form asp-action="Search" method="post">
+<!-- Benefits Section -->
+<div class="container-fluid py-4" style="background-color: #1A1A40;">
+    <div class="row text-center text-white">
+        <div class="col-md-4">
+            <i class="bi bi-clock-fill text-orange display-5"></i>
+            <h5 class="mt-2">24/7 Customer Support</h5>
+            <p class="small">We're here to help you anytime.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-cash-stack text-orange display-5"></i>
+            <h5 class="mt-2">No Hidden Fees</h5>
+            <p class="small">Transparent pricing guaranteed.</p>
+        </div>
+        <div class="col-md-4">
+            <i class="bi bi-car-front-fill text-orange display-5"></i>
+            <h5 class="mt-2">Wide Selection of Cars</h5>
+            <p class="small">Find the perfect car for your needs.</p>
+        </div>
+    </div>
+</div>
 
-    <label for="PickUpLocation">Pick-Up Location</label>
-    <input type="text" id="PickUpLocation" name="PickUpLocation" class="form-control" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
-    <label for="ReturnLocation">Return Location</label>
-    <input type="text" id="ReturnLocation" name="ReturnLocation" class="form-control" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
+<!-- Card Section -->
+<div class="container py-5">
+    <h2 class="text-center mb-4">Available Cars</h2>
+    <div class="row g-4 justify-content-center">
+        <div class="col-6 col-md-3">
+            <div class="card shadow">
+                <img src="/images/cars/car-small.jpg" class="card-img-top car-image" alt="Small Car">
+                <div class="card-body text-center">
+                    <h6 class="card-title mb-1">Small Car</h6>
+                    <p class="card-text"><strong>Price:</strong> $20/day</p>
+                    <p class="small text-muted">Perfect for city driving.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3" style="
+    margin-bottom: 40px;
+">
+            <div class="card shadow">
+                <img src="/images/cars/car-medium.jpg" class="card-img-top car-image" alt="Medium Car">
+                <div class="card-body text-center">
+                    <h6 class="card-title mb-1">Medium Car</h6>
+                    <p class="card-text"><strong>Price:</strong> $30/day</p>
+                    <p class="small text-muted">Great for family trips.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3" style="
+    margin-bottom: 40px;
+">
+            <div class="card shadow">
+                <img src="/images/cars/car-large.jpg" class="card-img-top car-image" alt="Large Car">
+                <div class="card-body text-center">
+                    <h6 class="card-title mb-1">Large Car</h6>
+                    <p class="card-text"><strong>Price:</strong> $40/day</p>
+                    <p class="small text-muted">Spacious and comfortable.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3" style="
+    margin-bottom: 40px;
+">
+            <div class="card shadow">
+                <img src="/images/cars/car-luxury.jpg" class="card-img-top car-image" alt="Luxury Car">
+                <div class="card-body text-center">
+                    <h6 class="card-title mb-1">Luxury Car</h6>
+                    <p class="card-text"><strong>Price:</strong> $60/day</p>
+                    <p class="small text-muted">Premium experience.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <label>Pick-up Date:</label>
-    <input type="date" name="pickUpDate" required />
+<style>
+    /* Image Styling */
+    .car-image {
+        height: 150px; /* Unified height */
+        object-fit: cover;
+        border-radius: 4px;
+    }
 
-    <label>Drop-off Date:</label>
-    <input type="date" name="dropOffDate" required />
+    /* Button Styling */
+    .btn-orange {
+        background-color: #FFA500;
+        color: white;
+        border: none;
+        font-size: 1rem;
+    }
 
-    <button type="submit">Search</button>
-</form>
+        .btn-orange:hover {
+            background-color: #FF8C00;
+        }
+
+    /* Section Icons */
+    .text-orange {
+        color: #FFA500;
+    }
+
+    .display-5 {
+        font-size: 2rem;
+    }
+
+    /* Add spacing and color balance */
+    .container-fluid {
+        padding: 20px;
+    }
+</style>

@@ -1,32 +1,82 @@
 ﻿@model IEnumerable<CarRentalSystem.Models.Car>
 
-<h2>Manage Cars</h2>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Manage Cars</h2>
 
-<a asp-action="AddCar" class="btn btn-success">Add New Car</a>
+    <a asp-action="AddCar" class="btn btn-success mb-3">Add New Car</a>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>License Plate</th>
-            <th>Year</th>
-            <th>Price Per Day</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
+    <div class="list-group shadow">
         @foreach (var car in Model)
         {
-            <tr>
-                <td>@car.Name</td>
-                <td>@car.LicensePlate</td>
-                <td>@car.Year</td>
-                <td>$@car.PricePerDay</td>
-                <td>
-                    <a asp-action="EditCar" asp-route-id="@car.Id" class="btn btn-warning">Edit</a>
-                    <a asp-action="DeleteCar" asp-route-id="@car.Id" class="btn btn-danger">Delete</a>
-                </td>
-            </tr>
+            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">@car.Name</h5>
+                    <p class="mb-0 text-muted">
+                        <strong>License Plate:</strong> @car.LicensePlate <br />
+                        <strong>Year:</strong> @car.Year <br />
+                        <strong>Price Per Day:</strong> $@car.PricePerDay
+                    </p>
+                </div>
+                <div>
+                    <a asp-action="EditCar" asp-route-id="@car.Id" class="btn btn-warning btn-sm me-2">Edit</a>
+                    <a asp-action="DeleteCar" asp-route-id="@car.Id" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+</div>
+<style>
+    /* Page Background */
+    body {
+        background-color: #f8f9fa; /* Light gray background */
+        color: #212529; /* Dark gray text for readability */
+    }
+
+    /* Heading Styling */
+    h2 {
+        font-weight: bold;
+        color: #1A1A40; /* Dark blue */
+        text-transform: uppercase;
+    }
+
+    /* List Group Styling */
+    .list-group-item {
+        background-color: #ffffff; /* White background for list items */
+        border: 1px solid #dee2e6; /* Subtle border for separation */
+        border-radius: 5px; /* Rounded corners */
+        transition: all 0.3s ease; /* Smooth hover effect */
+    }
+
+        .list-group-item:hover {
+            background-color: #f1f1f1; /* Light hover effect */
+            transform: scale(1.01); /* Slightly enlarge on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+        }
+
+    /* Buttons */
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+
+    .btn:hover {
+        opacity: 0.9; /* Slight opacity on hover */
+    }
+
+    /* Add New Car Button */
+    .btn-success {
+        margin-bottom: 1.5rem; /* Spacing below Add New Car button */
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+</style>

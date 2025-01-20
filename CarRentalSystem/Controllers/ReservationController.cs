@@ -183,6 +183,20 @@ namespace CarRentalSystem.Controllers
             return RedirectToAction("MyBookings", "User");
         }
 
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var reservation = await _context.Reservation
+                .Include(r => r.Car).ThenInclude(x=>x.Class)
+                .Include(r => r.Status)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            return View(reservation);
+        }
 
     }
 }

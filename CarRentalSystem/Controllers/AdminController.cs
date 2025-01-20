@@ -2,6 +2,7 @@
 using CarRentalSystem.Data;
 using CarRentalSystem.Models;
 using CarRentalSystem.Validators;
+using CarRentalSystem.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,6 @@ namespace CarRentalSystem.Controllers
 
         #region Manage Cars
 
-        //Display the list of all cars
         public async Task<IActionResult> ManageCars()
         {
             var cars = await _context.Car.Include(c => c.PricingTiers).ToListAsync();
@@ -65,7 +65,6 @@ namespace CarRentalSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCar(Car car, List<string> selectedFeatures)
         {
-            // Handle PricingTiers logic
             if (car.PricingTiers == null || !car.PricingTiers.Any())
             {
                 car.PricingTiers = new List<PricingTier>();
@@ -85,7 +84,6 @@ namespace CarRentalSystem.Controllers
                 }
             }
 
-            // Validate PricingTiers
             if (!ModelState.IsValid || car.PricingTiers.Count != PricingRanges.Ranges.Count)
             {
                 ModelState.AddModelError("", "All pricing tiers must be filled.");
@@ -95,14 +93,11 @@ namespace CarRentalSystem.Controllers
                 return View("AddOrEditCar", car);
             }
 
-            // Assign the base PricePerDay
             car.PricePerDay = car.PricingTiers.FirstOrDefault()?.PricePerDay ?? 0;
 
-            // Save the car
             _context.Car.Add(car);
             await _context.SaveChangesAsync();
 
-            // Save selected features
             if (selectedFeatures != null && selectedFeatures.Any())
             {
                 foreach (var feature in selectedFeatures)
@@ -232,11 +227,25 @@ namespace CarRentalSystem.Controllers
         #endregion
 
         #region Manage Users
-        public IActionResult Users()
+        public async Task<IActionResult> Users()
         {
             var users = _userManager.Users.ToList();
-            return View(users);
+
+            var model = new List<ManageUserViewModel>();
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                model.Add(new ManageUserViewModel
+                {
+                    UserId = user.Id,
+                    Email = user.Email,
+                    Roles = string.Join(", ", roles)
+                });
+            }
+
+            return View(model);
         }
+
 
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -254,15 +263,25 @@ namespace CarRentalSystem.Controllers
         {
             var reports = _context.Report.Include(r => r.User).ToList();
             return View(reports);
-        }    
+        }
 
         public IActionResult GenerateReport()
         {
+            // Get the current user's ID
+            var userId = _userManager.GetUserId(User); 
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                // Handle case when the user is not authenticated or the ID is not found
+                TempData["Error"] = "User not authenticated. Cannot generate report.";
+                return RedirectToAction("Reports");
+            }
+
             var report = new Report
             {
                 DateGenerated = DateTime.Now,
                 ReportDetails = $"Total Reservations: {_context.Reservation.Count()}",
-                //UserId = _userManager.GetUserId(User)
+                UserId = Guid.Parse(userId) // Parse the UserId if it's stored as a Guid
             };
 
             _context.Report.Add(report);
@@ -270,6 +289,7 @@ namespace CarRentalSystem.Controllers
 
             return RedirectToAction("Reports");
         }
+
         #endregion
     }
 }

@@ -1,35 +1,29 @@
-﻿<div class="container mt-5">
-    <h2 class="text-uppercase">Rental Details</h2>
-    <hr />
+﻿<div class="container py-5">
+    <h2 class="text-center text-primary mb-4 text-uppercase">Review Your Reservation</h2>
+    <p class="text-muted text-center mb-4">Please review your rental details carefully before confirming your reservation.</p>
 
-    <div class="table-responsive">
+    <div class="table-responsive mb-4">
         <table class="table table-bordered">
             <tbody>
-                <tr>
-                    <th class="bg-dark text-white">Pick-up Location</th>
-                    <th class="bg-dark text-white">Return Location</th>
+                <tr class="table-header">
+                    <th>Pick-up Location</th>
+                    <th>Return Location</th>
                 </tr>
                 <tr>
-                    <td>
-                        Tirana International Airport (TIA)<br />
-                        Tirana, Albania 1001
-                    </td>
-                    <td>
-                        Tirana International Airport (TIA)<br />
-                        Tirana, Albania 1001
-                    </td>
+                    <td>Tirana International Airport (TIA)<br />Tirana, Albania 1001</td>
+                    <td>Tirana International Airport (TIA)<br />Tirana, Albania 1001</td>
                 </tr>
-                <tr>
-                    <th class="bg-dark text-white">Pick-up Date & Time</th>
-                    <th class="bg-dark text-white">Return Date & Time</th>
+                <tr class="table-header">
+                    <th>Pick-up Date & Time</th>
+                    <th>Return Date & Time</th>
                 </tr>
                 <tr>
                     <td>@Model.PickUpDateTime.ToString("dd/MM/yyyy HH:mm")</td>
                     <td>@Model.ReturnDateTime.ToString("dd/MM/yyyy HH:mm")</td>
                 </tr>
-                <tr>
-                    <th class="bg-dark text-white">Selected Cars</th>
-                    <th class="bg-dark text-white">Price</th>
+                <tr class="table-header">
+                    <th>Selected Car</th>
+                    <th>Total Price</th>
                 </tr>
                 <tr>
                     <td>@Model.CarName, @Model.CarClass</td>
@@ -43,32 +37,62 @@
         <input type="hidden" name="CarId" value="@Model.CarId" />
         <input type="hidden" name="PickUpDateTime" value="@Model.PickUpDateTime.ToString("s")" />
         <input type="hidden" name="ReturnDateTime" value="@Model.ReturnDateTime.ToString("s")" />
-        <input type="text" id="PickUpLocation" name="PickUpLocation" class="form-control" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
+        <input type="hidden" name="PickUpLocation" value="Tirana International Airport (TIA), Tirana, Albania 1001" />
         <input type="hidden" name="ReturnLocation" value="Tirana International Airport (TIA), Tirana, Albania 1001" />
-        <input type="text" id="ReturnLocation" name="ReturnLocation" class="form-control" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
 
-        <div class="text-end mt-4">
-            <button type="submit" class="btn btn-primary">Confirm Reservation</button>
-            <a asp-action="CarList" asp-controller="UserCar" class="btn btn-secondary">Cancel</a>
+        <div class="text-end">
+            <button type="submit" class="btn btn-orange">Confirm Reservation</button>
+            <a asp-action="CarList" asp-controller="UserCar" class="btn btn-outline-orange">Cancel</a>
         </div>
     </form>
 </div>
 
 <style>
-    .bg-dark {
-        background-color: #333 !important;
+    /* General Container Styling */
+    .container {
+        max-width: 800px;
+        background-color: #f8f9fa; /* Light grey background */
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
     }
 
-    .text-uppercase {
-        text-transform: uppercase;
-    }
-
+    /* Table Styling */
     .table-bordered th, .table-bordered td {
-        border: 2px solid #333;
+        border: 2px solid #FFA500;
     }
 
-    .text-end {
-        text-align: right;
+    .table-header {
+        background-color: #1A1A40;
+        color: white;
     }
 
+    .table {
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    /* Buttons */
+    .btn-orange {
+        background-color: #FFA500;
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+    }
+
+        .btn-orange:hover {
+            background-color: #FF8C00;
+        }
+
+    .btn-outline-orange {
+        background-color: transparent;
+        border: 2px solid #FFA500;
+        color: #FFA500;
+        padding: 0.5rem 1.5rem;
+    }
+
+        .btn-outline-orange:hover {
+            background-color: #FFA500;
+            color: white;
+        }
 </style>

@@ -1,5 +1,6 @@
 ﻿using CarRentalSystem.Models;
 using CarRentalSystem.Services.Interfaces;
+using CarRentalSystem.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Encodings.Web;
@@ -21,33 +22,49 @@ public class AccountController : Controller
     public IActionResult Register() => View();
 
     [HttpPost]
-    public async Task<IActionResult> Register(string email, string password)
+    public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (ModelState.IsValid)
         {
-            var user = new User { UserName = email, Email = email };
-            var result = await _userManager.CreateAsync(user, password);
+            // Create a new user instance
+            var user = new User
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                FullName = model.FullName, // Assuming FullName is added to the User class
+                DateOfBirth = model.DateOfBirth // Assuming DateOfBirth is added to the User class
+            };
+
+            // Attempt to create the user
+            var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
+                // Generate email confirmation token
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 var confirmationLink = Url.Action("ConfirmEmail", "Account",
                     new { userId = user.Id, token = token }, Request.Scheme);
 
-                await _emailSender.SendEmailAsync(email, "Confirm your email",
+                // Send confirmation email
+                await _emailSender.SendEmailAsync(model.Email, "Confirm your email",
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(confirmationLink)}'>clicking here</a>.");
 
+                TempData["Message"] = "Registration successful. Please confirm your email.";
                 return RedirectToAction("EmailConfirmation");
             }
 
+            // Add errors to ModelState
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error.Description);
             }
         }
 
-        return View();
+        // If validation fails, redisplay the form
+        return View(model);
     }
+
 
     [HttpGet]
     public async Task<IActionResult> ConfirmEmail(string userId, string token)
@@ -105,14 +122,12 @@ public class AccountController : Controller
 
             if (user != null)
             {
-                // Check if the email is confirmed
                 if (!await _userManager.IsEmailConfirmedAsync(user))
                 {
                     ModelState.AddModelError("", "Your email has not been confirmed. Please check your inbox.");
                     return View();
                 }
 
-                // Proceed with login if email is confirmed
                 var result = await _signInManager.PasswordSignInAsync(email, password, false, false);
 
                 if (result.Succeeded)

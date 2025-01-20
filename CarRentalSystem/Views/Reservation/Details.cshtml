@@ -1,0 +1,85 @@
+﻿@model CarRentalSystem.Models.Reservation
+
+<div class="container py-5">
+    <h2 class="text-center text-primary mb-4">Reservation Details</h2>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h4 class="card-title text-primary">@Model.Car?.Name</h4>
+            <p class="text-muted">
+                <strong>Car Class:</strong> @Model.Car?.Class.Name <br />
+                <strong>Pick-Up Date:</strong> @Model.StartDate.ToString("dd/MM/yyyy") <br />
+                <strong>Return Date:</strong> @Model.EndDate.ToString("dd/MM/yyyy") <br />
+                <strong>Total Cost:</strong> € @Model.TotalCost.ToString("F2") <br />
+                <strong>Status:</strong>
+                <span class="badge @GetStatusClass(Model.Status?.Name)">
+                    @Model.Status?.Name
+                </span>
+            </p>
+            <hr />
+            <h5 class="text-primary">Pickup & Return Locations</h5>
+            <p class="text-muted">
+                <strong>Pick-Up Location:</strong> Tirana International Airport (TIA), Tirana, Albania 1001 <br />
+                <strong>Return Location:</strong> Tirana International Airport (TIA), Tirana, Albania 1001
+            </p>
+            <a asp-action="MyBookings" asp-controller="User" class="btn btn-outline-orange">Back to My Bookings</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* General Styling */
+    .container {
+        max-width: 800px;
+        background-color: #f8f9fa; /* Light grey background */
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+
+    /* Card Styling */
+    .card {
+        border-radius: 8px;
+        background-color: white;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        font-weight: bold;
+    }
+
+    .text-muted {
+        line-height: 1.8;
+    }
+
+    /* Buttons */
+    .btn-outline-orange {
+        background-color: transparent;
+        border: 2px solid #FFA500;
+        color: #FFA500;
+        text-transform: uppercase;
+        font-weight: bold;
+        padding: 0.5rem 1.5rem;
+    }
+
+        .btn-outline-orange:hover {
+            background-color: #FFA500;
+            color: white;
+        }
+</style>
+
+@functions {
+    string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Confirmed" => "badge-success",
+            "Pending" => "badge-warning",
+            "Cancelled" => "badge-danger",
+            _ => "badge-secondary"
+        };
+    }
+}

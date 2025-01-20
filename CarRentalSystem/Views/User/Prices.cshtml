@@ -1,52 +1,104 @@
 ﻿@model IEnumerable<IGrouping<string, CarRentalSystem.Models.Car>>
 
-<h2>Car Prices</h2>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Car / Day Price</th>
-            @foreach (var range in ViewBag.Ranges as List<(int Min, int Max)>)
-            {
-                <th>@($"{range.Min}-{range.Max} Days")</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var categoryGroup in Model)
-        {
-            <tr class="table-warning">
-                <td colspan="@((ViewBag.Ranges as List<(int, int)>).Count + 1)">
-                    <strong>@categoryGroup.Key</strong>
-                </td>
+<div class="container py-5">
+    <h2 class="text-center mb-4 text-primary">Car Prices</h2>
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Car / Day Price</th>
+                @foreach (var range in ViewBag.Ranges as List<(int Min, int Max)>)
+                {
+                    <th>@($"{range.Min}-{range.Max} Days")</th>
+                }
             </tr>
-            @foreach (var car in categoryGroup)
+        </thead>
+        <tbody>
+            @foreach (var categoryGroup in Model)
             {
-                <tr>
-                    <td>
-                        <div>
-                            <img src="@car.ImagePath" alt="@car.Name" style="max-height: 100px; object-fit: cover; margin-right: 10px;" />
-                            <div>
-                                <strong>@car.Name</strong><br />
-                                Gearbox: @car.Gearbox
-                            </div>
-                        </div>
+                <!-- Category Row -->
+                <tr class="table-category">
+                    <td colspan="@((ViewBag.Ranges as List<(int, int)>).Count + 1)" class="fw-bold text-center">
+                        @categoryGroup.Key
                     </td>
-                    @foreach (var range in ViewBag.Ranges as List<(int Min, int Max)>)
-                    {
-                        var tier = car.PricingTiers.FirstOrDefault(t => t.MinDays == range.Min && t.MaxDays == range.Max);
-                        <td>
-                            @if (tier != null)
-                            {
-                                @($"{tier.PricePerDay} Euro")
-                            }
-                            else
-                            {
-                                <span>-</span>
-                            }
-                        </td>
-                    }
                 </tr>
+                @foreach (var car in categoryGroup)
+                {
+                    <tr>
+                        <!-- Car Info -->
+                        <td class="d-flex align-items-center">
+                            <img src="@car.ImagePath" alt="@car.Name" class="me-3 rounded" style="height: 80px; width: auto; object-fit: cover;">
+                            <div>
+                                <strong class="text-primary">@car.Name</strong><br />
+                                <span class="text-muted">Gearbox: @car.Gearbox</span>
+                            </div>
+                        </td>
+
+                        <!-- Pricing for Each Range -->
+                        @foreach (var range in ViewBag.Ranges as List<(int Min, int Max)>)
+                        {
+                            var tier = car.PricingTiers.FirstOrDefault(t => t.MinDays == range.Min && t.MaxDays == range.Max);
+                            <td class="text-center">
+                                @if (tier != null)
+                                {
+                                    <span class="text-success fw-bold">@($"{tier.PricePerDay}€")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
             }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    /* Table Styling */
+    .table {
+        border: 1px solid #dee2e6; /* Light border for clean separation */
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa; /* Subtle hover effect */
+    }
+
+    .table-dark {
+        background-color: #1A1A40; /* Deep blue */
+        color: white;
+    }
+
+    .table-category {
+        background-color: #1A1A40; /* Deep blue */
+        color: #FFA500; /* Orange text for category rows */
+    }
+
+        .table-category td {
+            font-size: 1.1rem;
+            font-weight: bold;
         }
-    </tbody>
-</table>
+
+    /* Image Styling */
+    img {
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Text and Alignment */
+    .text-primary {
+        color: #1A1A40; /* Deep blue */
+    }
+
+    .text-muted {
+        color: #6c757d; /* Grey */
+    }
+
+    /* General Spacing */
+    .container {
+        max-width: 1200px;
+    }
+</style>

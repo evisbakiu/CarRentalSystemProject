@@ -1,74 +1,95 @@
 ﻿@model IEnumerable<IGrouping<string, CarRentalSystem.Models.Car>>
 
-@foreach (var carClassGroup in Model)
-{
-    <div class="car-class-section">
-        <h3 class="car-class-header">@carClassGroup.Key</h3>
-        <div class="car-list row">
-            @foreach (var car in carClassGroup)
-            {
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="@car.ImagePath" alt="@car.Name" class="img-fluid rounded-start">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">@car.Name</h5>
-                                    <p class="card-text"><strong>Fuel:</strong> @car.FuelType</p>
-                                    <p class="card-text"><strong>Class:</strong> @car.Class.Name</p>
-                                    <p class="card-text"><strong>Gearbox:</strong> @car.Gearbox</p>
-                                    <p class="card-text"><strong>Fuel Usage:</strong> @car.FuelUsage L/100km</p>
-                                    <p class="card-text"><strong>Price from:</strong> €@car.PricePerDay/day</p>
-                                    <h6>Features</h6>
-                                    <ul>
-                                        @foreach (var feature in car.Features)
-                                        {
-                                            <li>@feature.Name</li>
-                                        }
-                                    </ul>
-                                    <a class="btn btn-primary" asp-action="Rent" asp-controller ="User" asp-route-id="@car.Id">Rent</a>
-                                </div>
+<div class="container py-5">
+    @foreach (var carClassGroup in Model)
+    {
+        <div class="mb-5">
+            <h3 class="text-center py-2" style="background-color: #1A1A40; color: white;">@carClassGroup.Key</h3>
+            <div class="row g-4">
+                @foreach (var car in carClassGroup)
+                {
+                    <div class="col-md-4">
+                        <div class="card shadow-sm">
+                            <img src="@car.ImagePath" class="card-img-top car-image" alt="@car.Name">
+                            <div class="card-body">
+                                <h5 class="card-title">@car.Name</h5>
+                                <ul class="list-unstyled mb-3">
+                                    <li><strong>Fuel:</strong> @car.FuelType</li>
+                                    <li><strong>Gearbox:</strong> @car.Gearbox</li>
+                                    <li><strong>Fuel Usage:</strong> @car.FuelUsage L/100km</li>
+                                    <li><strong>Price:</strong> €@car.PricePerDay/day</li>
+                                </ul>
+                                <a href="@Url.Action("Rent", "User", new { id = car.Id })" class="btn btn-orange w-100">Rent Now</a>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
-    </div>
-}
+    }
+</div>
 
 <style>
-.car-class-header {
-    background-color: #ffc107;
-    padding: 10px;
-    font-weight: bold;
-}
-
-.car-class-section {
-    margin-bottom: 30px;
-}
-
-.card {
-    border: 1px solid #ddd;
-}
-
-.card-body ul {
-    padding-left: 20px;
-    list-style-type: none;
-}
-
-    .card-body ul li {
-        position: relative;
-        padding-left: 20px;
+    /* Header for car classes */
+    h3 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
     }
 
-        .card-body ul li:before {
-            content: "✔";
-            position: absolute;
-            left: 0;
-            color: green;
-            font-weight: bold;
+    /* Card styling */
+    .card {
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
+
+    /* Image styling */
+    .car-image {
+        height: 200px; /* Fixed height for uniformity */
+        width: 100%; /* Full width */
+        object-fit: cover; /* Ensures the image scales without distortion */
+        border-bottom: 3px solid #FFA500; /* Orange border below image */
+    }
+
+    /* Card body */
+    .card-body {
+        background-color: #f8f9fa; /* Light grey */
+        color: #1A1A40; /* Deep blue */
+        padding: 1rem;
+    }
+
+    .card-title {
+        font-weight: bold;
+        color: #1A1A40; /* Deep blue */
+        text-align: center; /* Centered title */
+        margin-bottom: 1rem;
+    }
+
+    /* Rent button styling */
+    .btn-orange {
+        background-color: #FFA500;
+        border: none;
+        color: white;
+    }
+
+        .btn-orange:hover {
+            background-color: #FF8C00; /* Darker orange */
+        }
+
+    /* Container spacing */
+    .container {
+        max-width: 1200px;
+    }
+
+    /* List Styling */
+    .list-unstyled li {
+        padding-bottom: 0.5rem;
+    }
 </style>

@@ -1,34 +1,24 @@
-﻿@{
-    ViewBag.Title = "Login";
-}
+﻿@model CarRentalSystem.ViewModel.LoginViewModel
 
-<h2>Login</h2>
-
-<form asp-action="Login" method="post">
-    <div class="mb-3">
-        <label>Email:</label>
-        <input type="email" name="email" class="form-control" required />
-    </div>
-
-    <div class="mb-3">
-        <label>Password:</label>
-        <input type="password" name="password" class="form-control" required />
-    </div>
-    <p>
-        Didn't receive the email?
-        <a asp-action="ResendConfirmationEmail" asp-route-email="">Resend Confirmation Email</a>
-    </p>
-
-
-    <button type="submit" class="btn btn-primary">Login</button>
-
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-danger mt-2">
-            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-            {
-                <p>@error.ErrorMessage</p>
-            }
+<div class="container py-5">
+    <h2 class="text-center text-primary mb-4">Sign In</h2>
+    <form method="post" asp-action="Login" asp-controller="Account">
+        <div class="mb-3">
+            <label for="Email" class="form-label">Email</label>
+            <input type="email" id="Email" name="Email" class="form-control" placeholder="Enter your email" required>
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
-    }
-</form>
+        <div class="mb-3">
+            <label for="Password" class="form-label">Password</label>
+            <input type="password" id="Password" name="Password" class="form-control" placeholder="Enter your password" required>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" id="RememberMe" name="RememberMe" class="form-check-input">
+            <label for="RememberMe" class="form-check-label">Remember Me</label>
+        </div>
+        <div class="text-end">
+            <button type="submit" class="btn btn-orange">Sign In</button>
+        </div>
+    </form>
+</div>

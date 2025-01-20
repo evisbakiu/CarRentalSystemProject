@@ -1,34 +1,126 @@
-﻿@model IEnumerable<CarRentalSystem.Models.Reservation>
+﻿@using System.Linq
+@model IEnumerable<CarRentalSystem.Models.Reservation>
 
-<h2>My Bookings</h2>
+<div class="container py-5">
+    <h2 class="text-center text-primary mb-4 text-uppercase">My Bookings</h2>
 
-@if (!Model.Any())
-{
-    <p>You have no bookings yet.</p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Car</th>
-                <th>Pick-Up Date</th>
-                <th>Return Date</th>
-                <th>Total Cost</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            <strong>You have no bookings yet.</strong> <br />
+            <a asp-controller="User" asp-action="CarList" class="btn btn-orange mt-3">Start Booking Now</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
             @foreach (var booking in Model)
             {
-                <tr>
-                    <td>@booking.Car?.Name</td>
-                    <td>@booking.StartDate.ToShortDateString()</td>
-                    <td>@booking.EndDate.ToShortDateString()</td>
-                    <td>$@booking.TotalCost</td>
-                    <td>@booking.Status?.Name</td>
-                </tr>
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">@booking.Car?.Name</h5>
+                            <p class="card-text text-muted mb-3">
+                                <strong>Pick-Up:</strong> @booking.StartDate.ToString("dd/MM/yyyy")<br />
+                                <strong>Return:</strong> @booking.EndDate.ToString("dd/MM/yyyy")<br />
+                                <strong>Total Cost:</strong> € @booking.TotalCost.ToString("F2")<br />
+                                <strong>Status:</strong>
+                                <span class="badge @GetStatusClass(booking.Status?.Name)">
+                                    @booking.Status?.Name
+                                </span>
+                            </p>
+                            <a asp-controller="Reservation" asp-action="Details" asp-route-id="@booking.Id" class="btn btn-outline-orange">View Details</a>
+                        </div>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
+        </div>
+    }
+</div>
+
+<style>
+    /* Container Styling */
+    .container {
+        max-width: 900px;
+    }
+
+    /* Card Styling */
+    .card {
+        background-color: #f8f9fa; /* Light grey */
+        border-radius: 8px;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        font-weight: bold;
+    }
+
+    .card-text {
+        line-height: 1.6;
+    }
+
+    /* Buttons */
+    .btn-orange {
+        background-color: #FFA500;
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+        .btn-orange:hover {
+            background-color: #FF8C00;
+        }
+
+    .btn-outline-orange {
+        background-color: transparent;
+        border: 2px solid #FFA500;
+        color: #FFA500;
+        padding: 0.5rem 1.5rem;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+        .btn-outline-orange:hover {
+            background-color: #FFA500;
+            color: white;
+        }
+
+    /* Badge Styling */
+    .badge-success {
+        background-color: #28a745; /* Green */
+        color: white;
+    }
+
+    .badge-warning {
+        background-color: #ffc107; /* Yellow */
+        color: black;
+    }
+
+    .badge-danger {
+        background-color: #dc3545; /* Red */
+        color: white;
+    }
+
+    .badge-secondary {
+        background-color: #6c757d; /* Grey */
+        color: white;
+    }
+</style>
+
+@functions {
+    string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Confirmed" => "badge-success",
+            "Pending" => "badge-warning",
+            "Cancelled" => "badge-danger",
+            _ => "badge-secondary"
+        };
+    }
 }

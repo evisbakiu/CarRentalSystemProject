@@ -121,6 +121,7 @@ namespace CarRentalSystem.Controllers
             var bookings = await _context.Reservation
                 .Where(r => r.UserId == user.Id)
                 .Include(r => r.Car)
+                .Include(x=>x.Status)
                 .OrderByDescending(r => r.StartDate)
                 .ToListAsync();
 

@@ -1,59 +1,137 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - CarRentalSystem</title>
-    <!-- Bootstrap CSS from CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/5hb7x1Gc5bI9e0HEcpdPVA0d7Q8/kL6K3OF7Tw" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/CarRentalSystem.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Navbar styling */
+        .navbar-custom {
+            background-color: #1A1A40; /* Deep blue background */
+            border-bottom: 2px solid #FFA500; /* Thin orange border */
+        }
+
+            .navbar-custom .nav-link,
+            .navbar-custom .navbar-brand {
+                color: #FFFFFF; /* White text */
+            }
+
+                .navbar-custom .nav-link:hover {
+                    color: #FFA500; /* Orange hover effect */
+                }
+
+        /* Footer Adjustments */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #1A1A40;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+            .footer a {
+                color: #FFA500; /* Footer link hover effect */
+                text-decoration: none;
+            }
+
+                .footer a:hover {
+                    text-decoration: underline;
+                }
+
+        /* Button styling */
+        .btn-orange {
+            background-color: #FFA500;
+            color: white;
+            border: none;
+        }
+
+            .btn-orange:hover {
+                background-color: #FF8C00;
+            }
+
+        .btn-outline-orange {
+            background-color: transparent;
+            border: 2px solid #FFA500;
+            color: #FFA500;
+        }
+
+            .btn-outline-orange:hover {
+                background-color: #FFA500;
+                color: white;
+                border-color: #FFA500;
+            }
+    </style>
 </head>
-<body>
-    <header>
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">CarRentalSystem</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="User" asp-action="CarList">Cars</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="User" asp-action="Prices">Prices</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Terms">Terms of Service</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a>
-                        </li>
-                    </ul>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">CarRentalSystem</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <!-- Admin Links -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="ManageCars">Manage Cars</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Users">Manage Users</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Reservations">Manage Reservations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Reports">Reports</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- Regular User Links -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="User" asp-action="CarList">Cars</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="User" asp-action="Prices">Prices</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Terms">Terms of Service</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="User" asp-action="MyBookings">My Bookings</a>
+                            </li>
+                        }
+                    }
+                </ul>
+
+                <!-- Login/Logout Partial -->
+                <ul class="navbar-nav">
                     <partial name="_LoginPartial" />
-                </div>
+                </ul>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-    <footer class="border-top footer text-muted mt-3">
-        <div class="container">
-            <p>&copy; 2025 - CarRentalSystem</p>
         </div>
+    </nav>
+
+    <!-- Render Body -->
+    <div class="container-fluid px-0 flex-grow-1">
+        @RenderBody()
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 - CarRentalSystem | <a href="@Url.Action("Privacy", "Home")">Privacy</a></p>
     </footer>
-    <!-- Bootstrap JS from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+k5yciQ/aqXG3E57HzlwqC4Q7WtyyzO6whDdPsk2U6wXrtNoWBQKa4/QGElI3r" crossorigin="anonymous"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.12/jquery.validate.unobtrusive.min.js"></script>
 </body>
 </html>

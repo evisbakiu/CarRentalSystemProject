@@ -1,27 +1,29 @@
-﻿@model IEnumerable<User>
+﻿@model IEnumerable<CarRentalSystem.ViewModel.ManageUserViewModel>
 
-<h2>Manage Users</h2>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Manage Users</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Email</th>
-            <th>Roles</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.Email</td>
-                <td>
-                    @* Roles can be fetched via UserManager if needed *@
-                </td>
-                <td>
-                    <a asp-action="DeleteUser" asp-route-id="@user.Id" class="btn btn-danger">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="table-responsive shadow">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.Email</td>
+                        <td>@user.Roles</td>
+                        <td>
+                            <a asp-action="DeleteUser" asp-route-id="@user.UserId" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
