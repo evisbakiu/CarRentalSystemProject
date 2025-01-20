@@ -290,6 +290,33 @@ namespace CarRentalSystem.Controllers
             return RedirectToAction("Reports");
         }
 
+        [HttpPost]
+        public IActionResult ChangeReservationStatus(Guid id)
+        {
+            var reservation = _context.Reservation.Include(x=>x.Status).FirstOrDefault(r => r.Id == id);
+            if (reservation == null)
+            {
+                return Json(new { success = false, message = "Reservation not found." });
+            }
+
+            if (reservation.Status.Name == "Confirmed")
+            {
+                reservation.Status = _context.Status.FirstOrDefault(s => s.Name == "Pending");
+            }
+            else
+            {
+                reservation.Status = _context.Status.FirstOrDefault(s => s.Name == "Confirmed");
+            }
+
+            _context.SaveChanges();
+
+            return Json(new
+            {
+                success = true,
+                status = reservation.Status.Name
+            });
+        }
+
         #endregion
     }
 }

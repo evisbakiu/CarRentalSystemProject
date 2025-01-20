@@ -12,12 +12,13 @@
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var reservation in Model)
                 {
-                    <tr>
+                    <tr id="reservation-@reservation.Id">
                         <td>@reservation.User?.UserName</td>
                         <td>@reservation.Car?.Name</td>
                         <td>@reservation.StartDate.ToString("MM/dd/yyyy")</td>
@@ -26,9 +27,12 @@
                             <span class="badge
                                 @(reservation.Status?.Name == "Confirmed" ? "bg-success" :
                                   reservation.Status?.Name == "Pending" ? "bg-warning text-dark" :
-                                  "bg-danger")">
+                                  "bg-danger")" id="status-@reservation.Id">
                                 @reservation.Status?.Name
                             </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-sm change-status" data-id="@reservation.Id">Change Status</button>
                         </td>
                     </tr>
                 }
@@ -37,24 +41,46 @@
     </div>
 </div>
 
-<style>
-    body {
-        background-color: #f8f9fa; 
-    }
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+     $(document).ready(function () {
+        $(".change-status").click(function () {
+            const button = $(this);
+            button.prop("disabled", true).text("Processing...");
 
-    h2 {
-        font-weight: bold;
-        color: #1A1A40;
-        text-transform: uppercase;
-    }
+            const reservationId = button.data("id");
+            const token = $('input[name="__RequestVerificationToken"]').val();
 
-    .table-responsive {
-        border-radius: 5px; 
-        overflow: hidden;
-    }
+            $.ajax({
+                url: "/Admin/ChangeReservationStatus",
+                type: "POST",
+                headers: { "RequestVerificationToken": token },
+                data: { id: reservationId },
+                success: function (response) {
+                    button.prop("disabled", false).text("Change Status");
 
-    .badge {
-        font-size: 0.9rem;
-        font-weight: bold;
-    }
-</style>
+                    if (response.success) {
+                        // Update status dynamically
+                        $(`#status-${reservationId}`).text(response.status);
+
+                        const badge = $(`#status-${reservationId}`);
+                        badge.removeClass("bg-success bg-warning bg-danger");
+
+                        if (response.status === "Confirmed") {
+                            badge.addClass("bg-success");
+                        } else if (response.status === "Pending") {
+                            badge.addClass("bg-warning text-dark");
+                        }
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    button.prop("disabled", false).text("Change Status");
+                    alert("An error occurred. Please try again.");
+                }
+            });
+        });
+    });
+
+</script>
