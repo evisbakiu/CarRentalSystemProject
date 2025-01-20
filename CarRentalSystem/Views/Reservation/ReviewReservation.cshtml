@@ -1,0 +1,74 @@
+﻿<div class="container mt-5">
+    <h2 class="text-uppercase">Rental Details</h2>
+    <hr />
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th class="bg-dark text-white">Pick-up Location</th>
+                    <th class="bg-dark text-white">Return Location</th>
+                </tr>
+                <tr>
+                    <td>
+                        Tirana International Airport (TIA)<br />
+                        Tirana, Albania 1001
+                    </td>
+                    <td>
+                        Tirana International Airport (TIA)<br />
+                        Tirana, Albania 1001
+                    </td>
+                </tr>
+                <tr>
+                    <th class="bg-dark text-white">Pick-up Date & Time</th>
+                    <th class="bg-dark text-white">Return Date & Time</th>
+                </tr>
+                <tr>
+                    <td>@Model.PickUpDateTime.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@Model.ReturnDateTime.ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+                <tr>
+                    <th class="bg-dark text-white">Selected Cars</th>
+                    <th class="bg-dark text-white">Price</th>
+                </tr>
+                <tr>
+                    <td>@Model.CarName, @Model.CarClass</td>
+                    <td>€ @Model.TotalCost.ToString("F2")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <form asp-action="ConfirmReservation" method="post">
+        <input type="hidden" name="CarId" value="@Model.CarId" />
+        <input type="hidden" name="PickUpDateTime" value="@Model.PickUpDateTime.ToString("s")" />
+        <input type="hidden" name="ReturnDateTime" value="@Model.ReturnDateTime.ToString("s")" />
+        <input type="text" id="PickUpLocation" name="PickUpLocation" class="form-control" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
+        <input type="hidden" name="ReturnLocation" value="Tirana International Airport (TIA), Tirana, Albania 1001" />
+        <input type="text" id="ReturnLocation" name="ReturnLocation" class="form-control" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
+
+        <div class="text-end mt-4">
+            <button type="submit" class="btn btn-primary">Confirm Reservation</button>
+            <a asp-action="CarList" asp-controller="UserCar" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .bg-dark {
+        background-color: #333 !important;
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+
+    .table-bordered th, .table-bordered td {
+        border: 2px solid #333;
+    }
+
+    .text-end {
+        text-align: right;
+    }
+
+</style>

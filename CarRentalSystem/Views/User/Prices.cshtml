@@ -1,0 +1,52 @@
+﻿@model IEnumerable<IGrouping<string, CarRentalSystem.Models.Car>>
+
+<h2>Car Prices</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Car / Day Price</th>
+            @foreach (var range in ViewBag.Ranges as List<(int Min, int Max)>)
+            {
+                <th>@($"{range.Min}-{range.Max} Days")</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var categoryGroup in Model)
+        {
+            <tr class="table-warning">
+                <td colspan="@((ViewBag.Ranges as List<(int, int)>).Count + 1)">
+                    <strong>@categoryGroup.Key</strong>
+                </td>
+            </tr>
+            @foreach (var car in categoryGroup)
+            {
+                <tr>
+                    <td>
+                        <div>
+                            <img src="@car.ImagePath" alt="@car.Name" style="max-height: 100px; object-fit: cover; margin-right: 10px;" />
+                            <div>
+                                <strong>@car.Name</strong><br />
+                                Gearbox: @car.Gearbox
+                            </div>
+                        </div>
+                    </td>
+                    @foreach (var range in ViewBag.Ranges as List<(int Min, int Max)>)
+                    {
+                        var tier = car.PricingTiers.FirstOrDefault(t => t.MinDays == range.Min && t.MaxDays == range.Max);
+                        <td>
+                            @if (tier != null)
+                            {
+                                @($"{tier.PricePerDay} Euro")
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>

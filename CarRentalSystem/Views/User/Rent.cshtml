@@ -1,0 +1,78 @@
+﻿@model CarRentalSystem.Models.Car
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.ImagePath" alt="@Model.Name" class="img-fluid mb-3">
+        </div>
+        <div class="col-md-6">
+            <h2>@Model.Name</h2>
+            <p><strong>Class:</strong> @Model.Class?.Name</p>
+            <p><strong>Fuel:</strong> @Model.FuelType</p>
+            <p><strong>Gearbox:</strong> @Model.Gearbox</p>
+            <p><strong>Fuel Usage:</strong> @Model.FuelUsage L/100km</p>
+            <p><strong>Mileage:</strong> Unlimited</p>
+            <p><strong>Price from:</strong> €@Model.PricePerDay / day</p>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="mt-3">
+        <h4>Additional Information</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <ul>
+                    @foreach (var feature in Model.Features)
+                    {
+                        <li>✔ @feature.Name</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="mt-3">
+        <h4>Pickup & Return</h4>
+        <form method="get" asp-action="ReviewReservation" asp-controller="Reservation">
+            <input type="hidden" name="CarId" value="@Model.Id" />
+            <input type="hidden" name="ReturnLocation" value="Tirana International Airport (TIA), Tirana, Albania 1001" />
+            <input type="text" id="ReturnLocation" name="ReturnLocation" class="form-control" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="PickUpDateTime">Pick-Up Date & Time</label>
+                    <input type="datetime-local" id="PickUpDateTime" name="PickUpDateTime" class="form-control" required />
+                </div>
+                <div class="col-md-6">
+                    <label for="ReturnDateTime">Return Date & Time</label>
+                    <input type="datetime-local" id="ReturnDateTime" name="ReturnDateTime" class="form-control" required />
+                </div>
+            </div>
+
+            <div class="mt-4 text-end">
+                <button type="submit" class="btn btn-primary">Continue</button>
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+    img {
+        border-radius: 10px;
+    }
+
+/*     ul li:before {
+        content: "✔";
+        color: green;
+        margin-right: 5px;
+    } */
+
+    .btn-primary {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: black;
+        font-weight: bold;
+    }
+</style>

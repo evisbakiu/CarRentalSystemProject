@@ -1,0 +1,33 @@
+﻿@model CarRentalSystem.Models.Car
+
+<h1>@Model.Name</h1>
+
+<img src="@Model.ImagePath" alt="@Model.Name" class="img-fluid mb-4" style="max-height: 400px; object-fit: cover;">
+
+<p><strong>Category:</strong> @Model.Category</p>
+<p><strong>Price per Day:</strong> $@Model.PricePerDay</p>
+<p><strong>Description:</strong> @Model.Name</p>
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <div class="alert alert-warning">
+        <p>You need to log in or register to book this car.</p>
+        <a class="btn btn-primary" href="@Url.Action("Login", "Account")">Login</a>
+        <a class="btn btn-secondary" href="@Url.Action("Register", "Account")">Register</a>
+    </div>
+}
+else
+{
+    <form method="post" asp-action="Rent" asp-controller="Reservation">
+        <input type="hidden" name="CarId" value="@Model.Id" />
+        <div class="form-group">
+            <label for="PickUpDate">Pick-Up Date</label>
+            <input type="date" id="PickUpDate" name="PickUpDate" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="ReturnDate">Return Date</label>
+            <input type="date" id="ReturnDate" name="ReturnDate" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+}

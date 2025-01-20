@@ -5,6 +5,12 @@
 <h2>Search for Available Cars</h2>
 
 <form asp-action="Search" method="post">
+
+    <label for="PickUpLocation">Pick-Up Location</label>
+    <input type="text" id="PickUpLocation" name="PickUpLocation" class="form-control" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
+    <label for="ReturnLocation">Return Location</label>
+    <input type="text" id="ReturnLocation" name="ReturnLocation" class="form-control" value="Tirana International Airport (TIA), Tirana, Albania 1001" readonly />
+
     <label>Pick-up Date:</label>
     <input type="date" name="pickUpDate" required />
 

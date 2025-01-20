@@ -1,0 +1,74 @@
+﻿@model IEnumerable<IGrouping<string, CarRentalSystem.Models.Car>>
+
+@foreach (var carClassGroup in Model)
+{
+    <div class="car-class-section">
+        <h3 class="car-class-header">@carClassGroup.Key</h3>
+        <div class="car-list row">
+            @foreach (var car in carClassGroup)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="@car.ImagePath" alt="@car.Name" class="img-fluid rounded-start">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">@car.Name</h5>
+                                    <p class="card-text"><strong>Fuel:</strong> @car.FuelType</p>
+                                    <p class="card-text"><strong>Class:</strong> @car.Class.Name</p>
+                                    <p class="card-text"><strong>Gearbox:</strong> @car.Gearbox</p>
+                                    <p class="card-text"><strong>Fuel Usage:</strong> @car.FuelUsage L/100km</p>
+                                    <p class="card-text"><strong>Price from:</strong> €@car.PricePerDay/day</p>
+                                    <h6>Features</h6>
+                                    <ul>
+                                        @foreach (var feature in car.Features)
+                                        {
+                                            <li>@feature.Name</li>
+                                        }
+                                    </ul>
+                                    <a class="btn btn-primary" asp-action="Rent" asp-controller ="User" asp-route-id="@car.Id">Rent</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<style>
+.car-class-header {
+    background-color: #ffc107;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.car-class-section {
+    margin-bottom: 30px;
+}
+
+.card {
+    border: 1px solid #ddd;
+}
+
+.card-body ul {
+    padding-left: 20px;
+    list-style-type: none;
+}
+
+    .card-body ul li {
+        position: relative;
+        padding-left: 20px;
+    }
+
+        .card-body ul li:before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: green;
+            font-weight: bold;
+        }
+</style>

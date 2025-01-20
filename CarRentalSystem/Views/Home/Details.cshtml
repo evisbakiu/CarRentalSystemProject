@@ -11,7 +11,7 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    <a asp-controller="Reservation" asp-action="Book" asp-route-id="@Model.Id" class="btn btn-success">Book Now</a>
+    <a asp-controller="User" asp-action="Rent" asp-route-id="@Model.Id" class="btn btn-success">Book Now</a>
 }
 else
 {

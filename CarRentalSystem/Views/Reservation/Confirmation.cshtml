@@ -1,0 +1,10 @@
+﻿@model CarRentalSystem.Models.Reservation
+
+<h1>Booking Confirmation</h1>
+
+<p><strong>Car:</strong> @Model.Car.Name</p>
+<p><strong>Start Date:</strong> @Model.StartDate.ToShortDateString()</p>
+<p><strong>End Date:</strong> @Model.EndDate.ToShortDateString()</p>
+<p><strong>Total Cost:</strong> $@Model.TotalCost</p>
+
+<a class="btn btn-primary" href="@Url.Action("Index", "Home")">Back to Home</a>

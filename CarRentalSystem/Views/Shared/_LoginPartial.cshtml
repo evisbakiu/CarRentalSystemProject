@@ -1,7 +1,13 @@
 ﻿<ul class="navbar-nav">
     @if (User.Identity?.IsAuthenticated == true)
     {
-        <span class="navbar-text text-dark">Hello @User.Identity?.Name!</span>
+        <span class="navbar-text text-dark">@User.Identity?.Name!</span>
+        @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-controller="User" asp-action="MyBookings">My Bookings</a>
+            </li>
+        }
         <li class="nav-item">
             <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline;">
                 <button type="submit" class="btn btn-link text-dark">Sign Out</button>

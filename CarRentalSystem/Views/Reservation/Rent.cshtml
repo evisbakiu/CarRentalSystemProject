@@ -1,13 +1,15 @@
 ﻿@model CarRentalSystem.Models.Car
 
 @{
-    ViewBag.Title = "Book Car";
+    ViewBag.Title = "Rent Car";
 }
 
 <h2>Book @Model.Name</h2>
 
-<form asp-action="Book" method="post">
+<form asp-action="Rent" method="post">
     <input type="hidden" name="carId" value="@Model.Id" />
+    <input type="hidden" name="PickUpLocation" value="Tirana International Airport (TIA), Tirana, Albania 1001" />
+    <input type="hidden" name="ReturnLocation" value="Tirana International Airport (TIA), Tirana, Albania 1001" />
 
     <div class="mb-3">
         <label>Pick-up Date:</label>

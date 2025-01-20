@@ -1,0 +1,29 @@
+﻿<h2>Pricing Tiers</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Min Days</th>
+            <th>Max Days</th>
+            <th>Price Per Day</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tier in Model.PricingTiers)
+        {
+            <tr>
+                <td>@tier.MinDays</td>
+                <td>@tier.MaxDays</td>
+                <td>@tier.PricePerDay</td>
+                <td>
+                    <a href="@Url.Action("EditPricingTier", "Admin", new { id = tier.Id })">Edit</a> |
+                    <form method="post" action="@Url.Action("DeletePricingTier", "Admin", new { id = tier.Id })" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("CreatePricingTier", "Admin", new { carId = Model.Id })" class="btn btn-primary">Add Pricing Tier</a>

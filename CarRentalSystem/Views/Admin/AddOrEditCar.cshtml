@@ -1,0 +1,118 @@
+﻿@using CarRentalSystem.Constants
+@model CarRentalSystem.Models.Car
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="@ViewData["Action"]" method="post">
+    <div class="form-group">
+        <label for="Name">Car Name</label>
+        <input type="text" id="Name" name="Name" class="form-control" value="@Model.Name" required />
+    </div>
+    <div class="form-group">
+        <label for="LicensePlate">License Plate</label>
+        <input type="text" id="LicensePlate" name="LicensePlate" class="form-control" value="@Model.LicensePlate" required />
+    </div>
+    <div class="form-group">
+        <label for="Year">Year</label>
+        <input type="number" id="Year" name="Year" class="form-control" value="@Model.Year" required />
+    </div>
+    <div class="form-group">
+        <label for="Gearbox">Gearbox</label>
+        <input type="text" id="Gearbox" name="Gearbox" class="form-control" value="@Model.Gearbox" required />
+    </div>
+    <div class="form-group">
+        <label for="FuelType">Fuel Type</label>
+        <select id="FuelType" name="FuelType" class="form-control" asp-for="FuelType" asp-items="ViewBag.FuelTypes">
+            <option value="" disabled>Select a fuel type</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="FuelUsage">Fuel Usage (L/100km)</label>
+        <input type="number" id="FuelUsage" name="FuelUsage" class="form-control" step="0.1" value="@Model.FuelUsage" required />
+    </div>
+    <div class="form-group">
+        <label for="Category">Category</label>
+        <select id="Category" name="CategoryId" class="form-control" required>
+            <option value="" disabled>Select a category</option>
+            @foreach (var category in ViewBag.Categories as List<CarRentalSystem.Models.Category>)
+            {
+                if (category.Id == Model.CategoryId)
+                {
+                    <option value="@category.Id" selected>@category.Name</option>
+                }
+                else
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="ClassId">Class</label>
+        <select id="ClassId" name="ClassId" class="form-control" required>
+            <option value="" disabled>Select a class</option>
+            @foreach (var carClass in ViewBag.Classes as List<CarRentalSystem.Models.CarClass>)
+            {
+                if (carClass.Id == Model.ClassId)
+                {
+                    <option value="@carClass.Id" selected>@carClass.Name</option>
+                }
+                else
+                {
+                    <option value="@carClass.Id">@carClass.Name</option>
+                }
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Features</label>
+        <div class="form-check">
+            @foreach (var feature in ViewBag.Features as List<string>)
+            {
+                <input type="checkbox" class="form-check-input" id="@feature" name="selectedFeatures" value="@feature" @(Model.Features != null && Model.Features.Any(f => f.Name == feature) ? "checked" : "") />
+                <label class="form-check-label" for="@feature">@feature</label><br />
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Pricing Tiers</label>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Min Days</th>
+                    <th>Max Days</th>
+                    <th>Price Per Day</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var range in PricingRanges.Ranges)
+                {
+                    var tier = Model.PricingTiers.FirstOrDefault(t => t.MinDays == range.Min && t.MaxDays == range.Max);
+                    <tr>
+                        <td>@range.Min</td>
+                        <td>@range.Max</td>
+                        <td>
+                            <input type="number"
+                                   name="PricingTiers[@range.Min].PricePerDay"
+                                   class="form-control"
+                                   step="0.01"
+                                   value="@(tier != null ? tier.PricePerDay : 0)"
+                                   required />
+                            <input type="hidden"
+                                   name="PricingTiers[@range.Min].MinDays"
+                                   value="@range.Min" />
+                            <input type="hidden"
+                                   name="PricingTiers[@range.Min].MaxDays"
+                                   value="@range.Max" />
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="ManageCars" class="btn btn-secondary">Cancel</a>
+</form>
