@@ -31,6 +31,7 @@ namespace CarRentalSystem.Controllers
             return View(reservations);
         }
 
+        [Authorize(Roles = "User")]
         [HttpGet]
         public async Task<IActionResult> Rent(Guid id)
         {
