@@ -1,11 +1,24 @@
+using System.Globalization;
 using CarRentalSystem.Data;
 using CarRentalSystem.Models;
 using CarRentalSystem.Services.Interfaces;
 using CarRentalSystem.Services.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+var supportedCultures = new[] { new CultureInfo("en-US") }; // Use "en-US" or your preferred culture
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("en-US"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+};
+
+
 
 builder.Services.AddControllersWithViews();
 
@@ -31,6 +44,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 var app = builder.Build();
+
+app.UseRequestLocalization(localizationOptions);
 
 using (var scope = app.Services.CreateScope())
 {

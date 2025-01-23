@@ -7,8 +7,11 @@
         <table class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
+                    <th>Fullname</th>
+                    <th>Username</th>
                     <th>Email</th>
-                    <th>Roles</th>
+                    <th>Phone Number</th>
+                    <th>Date of Birth</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -16,8 +19,11 @@
                 @foreach (var user in Model)
                 {
                     <tr>
+                        <td>@user.Fullname</td>
+                        <td>@user.Username</td>
                         <td>@user.Email</td>
-                        <td>@user.Roles</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>@user.DateOfBirth.ToString()</td>
                         <td>
                             <a asp-action="DeleteUser" asp-route-id="@user.UserId" class="btn btn-danger btn-sm">Delete</a>
                         </td>
@@ -27,3 +33,27 @@
         </table>
     </div>
 </div>
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Light background */
+    }
+
+    h2 {
+        font-weight: bold;
+        color: #1A1A40; /* Dark blue */
+        text-transform: uppercase;
+    }
+
+    .table-responsive {
+        border-radius: 5px; /* Rounded corners for table container */
+    }
+
+    .btn-danger {
+        font-weight: bold;
+    }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+</style>

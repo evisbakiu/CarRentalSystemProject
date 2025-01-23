@@ -14,7 +14,7 @@ namespace CarRentalSystem.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;     
         private readonly UserManager<User> _userManager;
 
         public AdminController(ApplicationDbContext context, UserManager<User> userManager)
@@ -65,55 +65,35 @@ namespace CarRentalSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCar(Car car, List<string> selectedFeatures)
         {
-            if (car.PricingTiers == null || !car.PricingTiers.Any())
+            if (ModelState.IsValid)
             {
-                car.PricingTiers = new List<PricingTier>();
-
-                foreach (var range in PricingRanges.Ranges)
+                car.PricingTiers ??= PricingRanges.Ranges.Select(range => new PricingTier
                 {
-                    var pricePerDay = HttpContext.Request.Form[$"PricingTiers[{range.Min}].PricePerDay"];
-                    if (!string.IsNullOrEmpty(pricePerDay) && decimal.TryParse(pricePerDay, out decimal parsedPrice))
-                    {
-                        car.PricingTiers.Add(new PricingTier
-                        {
-                            MinDays = range.Min,
-                            MaxDays = range.Max,
-                            PricePerDay = parsedPrice
-                        });
-                    }
-                }
-            }
+                    MinDays = range.Min,
+                    MaxDays = range.Max,
+                    PricePerDay = decimal.Parse(HttpContext.Request.Form[$"PricingTiers[{range.Min}].PricePerDay"])
+                }).ToList();
 
-            if (!ModelState.IsValid || car.PricingTiers.Count != PricingRanges.Ranges.Count)
-            {
-                ModelState.AddModelError("", "All pricing tiers must be filled.");
-                ViewBag.Categories = _context.Category.ToList();
-                ViewBag.Classes = _context.CarClass.ToList();
-                ViewBag.Features = _context.CarFeature.Select(f => f.Name).Distinct().ToList();
-                return View("AddOrEditCar", car);
-            }
-
-            car.PricePerDay = car.PricingTiers.FirstOrDefault()?.PricePerDay ?? 0;
-
-            _context.Car.Add(car);
-            await _context.SaveChangesAsync();
-
-            if (selectedFeatures != null && selectedFeatures.Any())
-            {
-                foreach (var feature in selectedFeatures)
-                {
-                    _context.CarFeature.Add(new CarFeature
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = feature,
-                        CarId = car.Id
-                    });
-                }
+                _context.Car.Add(car);
                 await _context.SaveChangesAsync();
+
+                if (selectedFeatures?.Any() == true)
+                {
+                    foreach (var feature in selectedFeatures)
+                    {
+                        _context.CarFeature.Add(new CarFeature { Name = feature, CarId = car.Id });
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
+                TempData["Success"] = "Car added successfully!";
+                return RedirectToAction("ManageCars");
             }
 
-            TempData["Success"] = "Car added successfully!";
-            return RedirectToAction("ManageCars");
+            ViewBag.Categories = _context.Category.ToList();
+            ViewBag.Classes = _context.CarClass.ToList();
+            ViewBag.Features = _context.CarFeature.Select(f => f.Name).Distinct().ToList();
+            return View("AddOrEditCar", car);
         }
 
 
@@ -124,6 +104,8 @@ namespace CarRentalSystem.Controllers
             var car = await _context.Car
                 .Include(c => c.PricingTiers)
                 .Include(c => c.Features)
+                .Include(c => c.Class)
+                .Include(c => c.Category)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (car == null)
@@ -134,16 +116,30 @@ namespace CarRentalSystem.Controllers
             ViewData["Title"] = "Edit Car";
             ViewData["Action"] = "EditCar";
 
+            var pricingRanges = PricingRanges.Ranges;
+            var pricingTiers = new List<PricingTier>();
+            foreach (var range in pricingRanges)
+            {
+                var existingTier = car.PricingTiers.FirstOrDefault(pt => pt.MinDays == range.Min && pt.MaxDays == range.Max);
+                pricingTiers.Add(existingTier ?? new PricingTier
+                {
+                    MinDays = range.Min,
+                    MaxDays = range.Max,
+                    PricePerDay = 0 
+                });
+            }
+
+            ViewBag.PricingTiers = pricingTiers;
             ViewBag.Categories = _context.Category.ToList();
             ViewBag.Classes = _context.CarClass.ToList();
             ViewBag.Features = _context.CarFeature.Select(f => f.Name).Distinct().ToList();
             ViewBag.FuelTypes = new List<SelectListItem>
-                {
-                    new SelectListItem { Value = "Petrol", Text = "Petrol" },
-                    new SelectListItem { Value = "Diesel", Text = "Diesel" },
-                    new SelectListItem { Value = "Hybrid", Text = "Hybrid" },
-                    new SelectListItem { Value = "Electric", Text = "Electric" }
-                };
+    {
+        new SelectListItem { Value = "Petrol", Text = "Petrol" },
+        new SelectListItem { Value = "Diesel", Text = "Diesel" },
+        new SelectListItem { Value = "Hybrid", Text = "Hybrid" },
+        new SelectListItem { Value = "Electric", Text = "Electric" }
+    };
 
             return View("AddOrEditCar", car);
         }
@@ -152,39 +148,54 @@ namespace CarRentalSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> EditCar(Car car)
         {
-            if (!ValidatePricingTiers.Value(car.PricingTiers))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Please provide pricing tiers for all required ranges.");
                 ViewBag.Categories = _context.Category.ToList();
+                ViewBag.Classes = _context.CarClass.ToList();
+                ViewBag.Features = _context.CarFeature.Select(f => f.Name).Distinct().ToList();
+                ViewBag.FuelTypes = new List<SelectListItem>
+        {
+            new SelectListItem { Value = "Petrol", Text = "Petrol" },
+            new SelectListItem { Value = "Diesel", Text = "Diesel" },
+            new SelectListItem { Value = "Hybrid", Text = "Hybrid" },
+            new SelectListItem { Value = "Electric", Text = "Electric" }
+        };
+
                 return View("AddOrEditCar", car);
             }
 
-            if (ModelState.IsValid)
+            var existingCar = await _context.Car
+                .Include(c => c.PricingTiers)
+                .FirstOrDefaultAsync(c => c.Id == car.Id);
+
+            if (existingCar == null)
             {
-                var existingCar = await _context.Car.Include(c => c.PricingTiers).FirstOrDefaultAsync(c => c.Id == car.Id);
-                if (existingCar == null) return NotFound();
-
-                existingCar.Name = car.Name;
-                existingCar.LicensePlate = car.LicensePlate;
-                existingCar.Year = car.Year;
-                existingCar.PricePerDay = car.PricePerDay;
-                existingCar.CategoryId = car.CategoryId;
-
-                _context.PricingTier.RemoveRange(existingCar.PricingTiers);
-                foreach (var tier in car.PricingTiers)
-                {
-                    tier.CarId = car.Id;
-                    _context.PricingTier.Add(tier);
-                }
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction("ManageCars");
+                return NotFound();
             }
 
-            ViewBag.Categories = _context.Category.ToList();
-            return View("AddOrEditCar", car);
-        }
+            existingCar.Name = car.Name;
+            existingCar.LicensePlate = car.LicensePlate;
+            existingCar.Year = car.Year;
+            existingCar.PricePerDay = car.PricePerDay;
+            existingCar.CategoryId = car.CategoryId;
+            existingCar.ClassId = car.ClassId;
+            existingCar.FuelType = car.FuelType;
+            existingCar.FuelUsage = car.FuelUsage;
 
+            _context.PricingTier.RemoveRange(existingCar.PricingTiers); 
+
+            foreach (var tier in car.PricingTiers)
+            {
+                tier.Id = Guid.NewGuid(); 
+                tier.CarId = car.Id;
+                _context.PricingTier.Add(tier); 
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Car updated successfully!";
+            return RedirectToAction("ManageCars");
+        }
 
 
         [HttpPost]
@@ -229,22 +240,21 @@ namespace CarRentalSystem.Controllers
         #region Manage Users
         public async Task<IActionResult> Users()
         {
-            var users = _userManager.Users.ToList();
+            var users = await _userManager.Users.ToListAsync();
 
-            var model = new List<ManageUserViewModel>();
-            foreach (var user in users)
+            var model = users.Select(user => new ManageUserViewModel
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                model.Add(new ManageUserViewModel
-                {
-                    UserId = user.Id,
-                    Email = user.Email,
-                    Roles = string.Join(", ", roles)
-                });
-            }
+                UserId = user.Id,
+                Email = user.Email,
+                Username = user.UserName,
+                PhoneNumber = user.PhoneNumber,
+                Fullname = user.FullName, 
+                DateOfBirth = user.DateOfBirth 
+            }).ToList();
 
             return View(model);
         }
+
 
 
         public async Task<IActionResult> DeleteUser(string id)
@@ -265,23 +275,24 @@ namespace CarRentalSystem.Controllers
             return View(reports);
         }
 
-        public IActionResult GenerateReport()
+        public async Task<IActionResult> GenerateReport()
         {
-            // Get the current user's ID
             var userId = _userManager.GetUserId(User); 
 
             if (string.IsNullOrEmpty(userId))
             {
-                // Handle case when the user is not authenticated or the ID is not found
                 TempData["Error"] = "User not authenticated. Cannot generate report.";
                 return RedirectToAction("Reports");
             }
+
+            var user = await _userManager.GetUserAsync(User);
 
             var report = new Report
             {
                 DateGenerated = DateTime.Now,
                 ReportDetails = $"Total Reservations: {_context.Reservation.Count()}",
-                UserId = Guid.Parse(userId) // Parse the UserId if it's stored as a Guid
+                UserId = Guid.Parse(userId) ,
+                User = user
             };
 
             _context.Report.Add(report);

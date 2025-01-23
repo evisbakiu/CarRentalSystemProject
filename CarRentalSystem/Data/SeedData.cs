@@ -31,7 +31,7 @@ namespace CarRentalSystem.Data
 
             if (adminUser == null)
             {
-                var newAdmin = new User { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
+                var newAdmin = new User { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true, FullName = "admin" };
                 var createAdminResult = await userManager.CreateAsync(newAdmin, adminPassword);
 
                 if (createAdminResult.Succeeded)

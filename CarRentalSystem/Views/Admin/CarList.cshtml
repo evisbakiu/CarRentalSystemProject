@@ -3,80 +3,75 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Manage Cars</h2>
 
-    <a asp-action="AddCar" class="btn btn-success mb-3">Add New Car</a>
+    <div class="text-end mb-4">
+        <a asp-action="AddCar" class="btn btn-success">Add New Car</a>
+    </div>
 
-    <div class="list-group shadow">
+    <div class="row g-3">
         @foreach (var car in Model)
         {
-            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                <div>
-                    <h5 class="mb-1">@car.Name</h5>
-                    <p class="mb-0 text-muted">
-                        <strong>License Plate:</strong> @car.LicensePlate <br />
-                        <strong>Year:</strong> @car.Year <br />
-                        <strong>Price Per Day:</strong> $@car.PricePerDay
-                    </p>
-                </div>
-                <div>
-                    <a asp-action="EditCar" asp-route-id="@car.Id" class="btn btn-warning btn-sm me-2">Edit</a>
-                    <a asp-action="DeleteCar" asp-route-id="@car.Id" class="btn btn-danger btn-sm">Delete</a>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@car.Name</h5>
+                        <p class="card-text">
+                            <strong>License Plate:</strong> @car.LicensePlate <br />
+                            <strong>Year:</strong> @car.Year <br />
+                            <strong>Price Per Day:</strong> $@car.PricePerDay
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="EditCar" asp-route-id="@car.Id" class="btn btn-warning btn-sm">Edit</a>
+                            <form asp-action="DeleteCar" asp-route-id="@car.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
 <style>
-    /* Page Background */
     body {
-        background-color: #f8f9fa; /* Light gray background */
-        color: #212529; /* Dark gray text for readability */
+        background-color: #f8f9fa;
     }
 
-    /* Heading Styling */
-    h2 {
-        font-weight: bold;
-        color: #1A1A40; /* Dark blue */
-        text-transform: uppercase;
+    .container {
+        padding-bottom: 5rem; /* Ensure enough space at the bottom */
     }
 
-    /* List Group Styling */
-    .list-group-item {
-        background-color: #ffffff; /* White background for list items */
-        border: 1px solid #dee2e6; /* Subtle border for separation */
-        border-radius: 5px; /* Rounded corners */
-        transition: all 0.3s ease; /* Smooth hover effect */
+    .card {
+        margin-bottom: 1.5rem; /* Spacing between cards */
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-        .list-group-item:hover {
-            background-color: #f1f1f1; /* Light hover effect */
-            transform: scale(1.01); /* Slightly enlarge on hover */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+        .card:hover {
+            transform: scale(1.01); /* Slight zoom effect on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhance hover effect */
         }
 
-    /* Buttons */
-    .btn-success {
-        background-color: #28a745;
-        border: none;
-    }
-
-    .btn-warning {
-        background-color: #ffc107;
-        border: none;
-    }
-
-    .btn-danger {
-        background-color: #dc3545;
-        border: none;
-    }
-
-    .btn:hover {
-        opacity: 0.9; /* Slight opacity on hover */
-    }
-
-    /* Add New Car Button */
-    .btn-success {
-        margin-bottom: 1.5rem; /* Spacing below Add New Car button */
-        font-size: 0.9rem;
+    .btn {
         font-weight: bold;
     }
+
+    footer {
+        background-color: #1A1A40;
+        color: white;
+        padding: 1rem 0;
+        text-align: center;
+        position: relative; /* Change to relative to avoid overlap */
+    }
+
+        footer a {
+            color: #FFA500;
+            text-decoration: none;
+        }
+
+            footer a:hover {
+                text-decoration: underline;
+            }
 </style>
+
