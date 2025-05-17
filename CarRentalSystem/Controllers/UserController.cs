@@ -24,6 +24,40 @@ namespace CarRentalSystem.Controllers
             return View(users);
         }
 
+        //ADED PART II
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+
+            return View(user);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Profile(User updatedUser)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+
+            user.FullName = updatedUser.FullName;
+            user.DateOfBirth = updatedUser.DateOfBirth;
+            user.PhoneNumber = updatedUser.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                ViewBag.Success = true;
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError("", error.Description);
+            }
+
+            return View(user);
+        }
+
         public async Task<IActionResult> CarList()
         {
             var cars = await _context.Car
