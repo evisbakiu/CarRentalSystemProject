@@ -1,6 +1,5 @@
 ﻿using CarRentalSystem.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CarRentalSystem.Data
 {
@@ -13,7 +12,7 @@ namespace CarRentalSystem.Data
             var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
             // 1. Seed Roles
-            string[] roleNames = { "Admin", "User" };
+            string[] roleNames = { "Admin", "Client", "Manager" };
 
             foreach (var roleName in roleNames)
             {
@@ -31,10 +30,17 @@ namespace CarRentalSystem.Data
 
             if (adminUser == null)
             {
-                var newAdmin = new User { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true, FullName = "admin" };
-                var createAdminResult = await userManager.CreateAsync(newAdmin, adminPassword);
+                var newAdmin = new User
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    EmailConfirmed = true,
+                    FullName = "Admin"
+                };
 
-                if (createAdminResult.Succeeded)
+                var result = await userManager.CreateAsync(newAdmin, adminPassword);
+
+                if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(newAdmin, "Admin");
                 }
@@ -68,6 +74,7 @@ namespace CarRentalSystem.Data
                 }
             }
 
+            // 4. Seed Statuses
             var statuses = new List<Status>
             {
                 new Status { Name = "Pending" },

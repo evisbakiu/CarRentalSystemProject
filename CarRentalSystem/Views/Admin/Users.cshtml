@@ -12,6 +12,7 @@
                     <th>Email</th>
                     <th>Phone Number</th>
                     <th>Date of Birth</th>
+                    <th>Roles</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -23,8 +24,10 @@
                         <td>@user.Username</td>
                         <td>@user.Email</td>
                         <td>@user.PhoneNumber</td>
-                        <td>@user.DateOfBirth.ToString()</td>
+                        <td>@user.DateOfBirth?.ToString("yyyy-MM-dd")</td>
+                        <td>@string.Join(", ", user.Roles)</td>
                         <td>
+                            <a asp-action="EditUser" asp-route-userId="@user.UserId" class="btn btn-outline-primary btn-sm me-1">Edit</a>
                             <a asp-action="DeleteUser" asp-route-id="@user.UserId" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>
@@ -36,24 +39,26 @@
 
 <style>
     body {
-        background-color: #f8f9fa; /* Light background */
+        background-color: #f8f9fa;
     }
 
     h2 {
         font-weight: bold;
-        color: #1A1A40; /* Dark blue */
+        color: #1A1A40;
         text-transform: uppercase;
     }
 
     .table-responsive {
-        border-radius: 5px; /* Rounded corners for table container */
+        border-radius: 5px;
     }
 
-    .btn-danger {
+    .btn-danger,
+    .btn-outline-primary {
         font-weight: bold;
     }
 
-        .btn-danger:hover {
+        .btn-danger:hover,
+        .btn-outline-primary:hover {
             opacity: 0.9;
         }
 </style>
