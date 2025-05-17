@@ -14,7 +14,13 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var cars = _context.Car.ToList(); 
+        var cars = _context.Car.ToList();
+
+        var consentCookie = Request.Cookies["userConsent"];
+        bool isConsentGiven = consentCookie == "true";
+
+        ViewBag.ConsentGiven = isConsentGiven;
+
         return View(cars);
     }    
     

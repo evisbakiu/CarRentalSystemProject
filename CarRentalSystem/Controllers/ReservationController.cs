@@ -151,10 +151,22 @@ namespace CarRentalSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> ConfirmReservation(Guid carId, DateTime pickUpDateTime, DateTime returnDateTime)
         {
-            var car = await _context.Car.FindAsync(carId);
-            if (car == null || !car.IsAvailable)
+            var car = await _context.Car
+                .Include(c => c.Reservations) 
+                .FirstOrDefaultAsync(c => c.Id == carId);
+
+            if (car == null)
             {
-                ModelState.AddModelError("", "The selected car is not available.");
+                ModelState.AddModelError("", "The selected car does not exist.");
+                return RedirectToAction("ReviewReservation", new { carId, pickUpDateTime, returnDateTime });
+            }
+
+            bool isReserved = car.Reservations.Any(r =>
+                (pickUpDateTime < r.EndDate && returnDateTime > r.StartDate)); 
+
+            if (isReserved)
+            {
+                ModelState.AddModelError("", "The selected car is not available for the chosen dates.");
                 return RedirectToAction("ReviewReservation", new { carId, pickUpDateTime, returnDateTime });
             }
 
@@ -175,14 +187,13 @@ namespace CarRentalSystem.Controllers
                 StatusId = _context.Status.FirstOrDefault(s => s.Name == "Pending")!.Id
             };
 
-            car.IsAvailable = false;
-
             _context.Reservation.Add(reservation);
             await _context.SaveChangesAsync();
 
             TempData["Success"] = "Your reservation has been successfully confirmed!";
             return RedirectToAction("MyBookings", "User");
         }
+
 
         public async Task<IActionResult> Details(Guid id)
         {

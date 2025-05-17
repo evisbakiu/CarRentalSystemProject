@@ -26,14 +26,13 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            // Create a new user instance
             var user = new User
             {
                 UserName = model.Email,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
-                FullName = model.FullName, // Assuming FullName is added to the User class
-                DateOfBirth = model.DateOfBirth // Assuming DateOfBirth is added to the User class
+                FullName = model.FullName, 
+                DateOfBirth = model.DateOfBirth 
             };
 
             // Attempt to create the user

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRentalSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250120061726_AddNewPropertiesForUser")]
-    partial class AddNewPropertiesForUser
+    [Migration("20250124063644_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -77,9 +77,9 @@ namespace CarRentalSystem.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4821964e-a04c-49d0-961a-9fcdfdea0816"),
-                            CategoryId = new Guid("2788532a-e414-4578-b6a4-e7ae68d0d8ae"),
-                            ClassId = new Guid("3786eedd-dae5-4448-adf6-5fcf3597d8b0"),
+                            Id = new Guid("8039d225-76e1-4477-8236-e5c354153f91"),
+                            CategoryId = new Guid("5325d50a-c054-42c2-a3f2-7dde39ae8721"),
+                            ClassId = new Guid("86a055a5-19c2-48e5-9e0f-cf9c2d065a82"),
                             FuelType = "Petrol",
                             FuelUsage = 4m,
                             Gearbox = "Manual",
@@ -92,9 +92,9 @@ namespace CarRentalSystem.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0fd4c75f-f81c-405f-a443-4aea308f41a8"),
-                            CategoryId = new Guid("2788532a-e414-4578-b6a4-e7ae68d0d8ae"),
-                            ClassId = new Guid("3786eedd-dae5-4448-adf6-5fcf3597d8b0"),
+                            Id = new Guid("348897f5-935a-4523-b69b-f13e9df249ab"),
+                            CategoryId = new Guid("5325d50a-c054-42c2-a3f2-7dde39ae8721"),
+                            ClassId = new Guid("86a055a5-19c2-48e5-9e0f-cf9c2d065a82"),
                             FuelType = "Petrol",
                             FuelUsage = 3.8m,
                             Gearbox = "Manual",
@@ -107,9 +107,9 @@ namespace CarRentalSystem.Migrations
                         },
                         new
                         {
-                            Id = new Guid("9df8f859-4ccf-4039-b6cf-f02fe451bf81"),
-                            CategoryId = new Guid("61b24e6a-5f4e-41ae-a1ae-44a4dc427c71"),
-                            ClassId = new Guid("3ccf4055-af0e-437b-a0dc-a34c62de2f0b"),
+                            Id = new Guid("e2a5c157-5f55-4543-af53-b549a0a9e75b"),
+                            CategoryId = new Guid("44a0794d-5360-42ba-a276-a1b4cac7ff6e"),
+                            ClassId = new Guid("8c740178-11a2-4201-a8fb-bd35fbb7e604"),
                             FuelType = "Diesel",
                             FuelUsage = 5.1m,
                             Gearbox = "Automatic",
@@ -122,9 +122,9 @@ namespace CarRentalSystem.Migrations
                         },
                         new
                         {
-                            Id = new Guid("2e618d6b-4536-49d1-aa6a-ba2fe7cff3ad"),
-                            CategoryId = new Guid("61b24e6a-5f4e-41ae-a1ae-44a4dc427c71"),
-                            ClassId = new Guid("3ccf4055-af0e-437b-a0dc-a34c62de2f0b"),
+                            Id = new Guid("a185a4d2-5fc3-4c53-89d8-45c83e1a815c"),
+                            CategoryId = new Guid("44a0794d-5360-42ba-a276-a1b4cac7ff6e"),
+                            ClassId = new Guid("8c740178-11a2-4201-a8fb-bd35fbb7e604"),
                             FuelType = "Petrol",
                             FuelUsage = 4.8m,
                             Gearbox = "Manual",
@@ -137,9 +137,9 @@ namespace CarRentalSystem.Migrations
                         },
                         new
                         {
-                            Id = new Guid("f58e50dc-9bc7-4948-a88e-2b70223df664"),
-                            CategoryId = new Guid("314be868-8e21-45a6-b328-f0ea565bcf4f"),
-                            ClassId = new Guid("62edc72f-97d0-4447-aaa7-4e70e723b063"),
+                            Id = new Guid("9587fc17-a4c6-487c-be94-b7b6fc9e3678"),
+                            CategoryId = new Guid("f1e8e72b-e7eb-45b6-b288-9559047444db"),
+                            ClassId = new Guid("44174ecc-ba3f-4a7f-80e2-0d4b195d6e2f"),
                             FuelType = "Hybrid",
                             FuelUsage = 4.2m,
                             Gearbox = "Automatic",
@@ -152,9 +152,9 @@ namespace CarRentalSystem.Migrations
                         },
                         new
                         {
-                            Id = new Guid("55ad9be3-f80c-4b9e-aa7d-ce6022c21c02"),
-                            CategoryId = new Guid("314be868-8e21-45a6-b328-f0ea565bcf4f"),
-                            ClassId = new Guid("62edc72f-97d0-4447-aaa7-4e70e723b063"),
+                            Id = new Guid("a62d2f76-6fe0-4e21-935b-6b0e2d933f01"),
+                            CategoryId = new Guid("f1e8e72b-e7eb-45b6-b288-9559047444db"),
+                            ClassId = new Guid("44174ecc-ba3f-4a7f-80e2-0d4b195d6e2f"),
                             FuelType = "Petrol",
                             FuelUsage = 6m,
                             Gearbox = "Automatic",
@@ -167,9 +167,9 @@ namespace CarRentalSystem.Migrations
                         },
                         new
                         {
-                            Id = new Guid("025f9a8a-1266-4dae-bfbc-f4f194a776e7"),
-                            CategoryId = new Guid("8efea0c7-de81-4fb2-9a5c-0e226d7fc286"),
-                            ClassId = new Guid("9605f476-cea8-4d49-b3a7-fe4e90e53f36"),
+                            Id = new Guid("4d8c916f-a893-4b71-a472-9dd2a47f0a50"),
+                            CategoryId = new Guid("006c7f03-2944-472c-9d78-9bb42c841c9c"),
+                            ClassId = new Guid("9eb7fe2f-67f9-44c0-917f-077a5994a7c2"),
                             FuelType = "Petrol",
                             FuelUsage = 9m,
                             Gearbox = "Automatic",
@@ -182,9 +182,9 @@ namespace CarRentalSystem.Migrations
                         },
                         new
                         {
-                            Id = new Guid("264259ad-40a2-4d6f-a960-0084fe09ed21"),
-                            CategoryId = new Guid("1f8a5710-da48-4589-a7d4-88826d09e10e"),
-                            ClassId = new Guid("9605f476-cea8-4d49-b3a7-fe4e90e53f36"),
+                            Id = new Guid("9a79c6e7-38ca-4c94-81c9-9d359fa692f6"),
+                            CategoryId = new Guid("5f6b83b4-a93e-4a9d-8e46-46a4977c69a9"),
+                            ClassId = new Guid("9eb7fe2f-67f9-44c0-917f-077a5994a7c2"),
                             FuelType = "Diesel",
                             FuelUsage = 8.5m,
                             Gearbox = "Automatic",
@@ -197,9 +197,9 @@ namespace CarRentalSystem.Migrations
                         },
                         new
                         {
-                            Id = new Guid("42d13d9b-92c1-459d-a6bb-33a28b800996"),
-                            CategoryId = new Guid("314be868-8e21-45a6-b328-f0ea565bcf4f"),
-                            ClassId = new Guid("869bd08d-27db-4b20-b6fe-5a0c5dcd63c5"),
+                            Id = new Guid("bcba206b-c474-48d8-85b1-5bf3a09891a1"),
+                            CategoryId = new Guid("f1e8e72b-e7eb-45b6-b288-9559047444db"),
+                            ClassId = new Guid("7abc5447-4fed-41ba-8c3a-5422da1ea921"),
                             FuelType = "Diesel",
                             FuelUsage = 8m,
                             Gearbox = "Manual",
@@ -212,9 +212,9 @@ namespace CarRentalSystem.Migrations
                         },
                         new
                         {
-                            Id = new Guid("ec6d5d08-718b-486b-997b-ff449eaae86d"),
-                            CategoryId = new Guid("314be868-8e21-45a6-b328-f0ea565bcf4f"),
-                            ClassId = new Guid("869bd08d-27db-4b20-b6fe-5a0c5dcd63c5"),
+                            Id = new Guid("44043075-a6cb-46f2-aadf-f3e1d610b8b0"),
+                            CategoryId = new Guid("f1e8e72b-e7eb-45b6-b288-9559047444db"),
+                            ClassId = new Guid("7abc5447-4fed-41ba-8c3a-5422da1ea921"),
                             FuelType = "Diesel",
                             FuelUsage = 7.5m,
                             Gearbox = "Manual",
@@ -244,27 +244,27 @@ namespace CarRentalSystem.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3786eedd-dae5-4448-adf6-5fcf3597d8b0"),
+                            Id = new Guid("86a055a5-19c2-48e5-9e0f-cf9c2d065a82"),
                             Name = "Small"
                         },
                         new
                         {
-                            Id = new Guid("3ccf4055-af0e-437b-a0dc-a34c62de2f0b"),
+                            Id = new Guid("8c740178-11a2-4201-a8fb-bd35fbb7e604"),
                             Name = "Compact"
                         },
                         new
                         {
-                            Id = new Guid("62edc72f-97d0-4447-aaa7-4e70e723b063"),
+                            Id = new Guid("44174ecc-ba3f-4a7f-80e2-0d4b195d6e2f"),
                             Name = "SUV"
                         },
                         new
                         {
-                            Id = new Guid("9605f476-cea8-4d49-b3a7-fe4e90e53f36"),
+                            Id = new Guid("9eb7fe2f-67f9-44c0-917f-077a5994a7c2"),
                             Name = "Luxury"
                         },
                         new
                         {
-                            Id = new Guid("869bd08d-27db-4b20-b6fe-5a0c5dcd63c5"),
+                            Id = new Guid("7abc5447-4fed-41ba-8c3a-5422da1ea921"),
                             Name = "Van"
                         });
                 });
@@ -291,242 +291,242 @@ namespace CarRentalSystem.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d56916d9-8edd-4fbc-a0e7-370b32326342"),
-                            CarId = new Guid("4821964e-a04c-49d0-961a-9fcdfdea0816"),
+                            Id = new Guid("fa943172-b74b-49f3-aec4-d11637e2bc98"),
+                            CarId = new Guid("8039d225-76e1-4477-8236-e5c354153f91"),
                             Name = "A/C"
                         },
                         new
                         {
-                            Id = new Guid("b6a65876-4d07-4bde-9a79-c87ee4598953"),
-                            CarId = new Guid("4821964e-a04c-49d0-961a-9fcdfdea0816"),
+                            Id = new Guid("d4ad237d-7a40-4a5b-baa3-9418a6c93da4"),
+                            CarId = new Guid("8039d225-76e1-4477-8236-e5c354153f91"),
                             Name = "Airbags"
                         },
                         new
                         {
-                            Id = new Guid("91f15f19-2f0c-4434-a0df-7f10a3debda0"),
-                            CarId = new Guid("4821964e-a04c-49d0-961a-9fcdfdea0816"),
+                            Id = new Guid("5d61f2c2-7826-43f0-92df-fe8c2c7c8085"),
+                            CarId = new Guid("8039d225-76e1-4477-8236-e5c354153f91"),
                             Name = "Central Locking"
                         },
                         new
                         {
-                            Id = new Guid("92f2bf73-2fc2-41b1-a55f-dd9cd144f3d2"),
-                            CarId = new Guid("4821964e-a04c-49d0-961a-9fcdfdea0816"),
+                            Id = new Guid("b3a09dd1-8bef-44db-94d6-92ebb9d0c4e7"),
+                            CarId = new Guid("8039d225-76e1-4477-8236-e5c354153f91"),
                             Name = "Electric Windows"
                         },
                         new
                         {
-                            Id = new Guid("eadd505a-b208-4106-9437-0212b60ae97c"),
-                            CarId = new Guid("0fd4c75f-f81c-405f-a443-4aea308f41a8"),
+                            Id = new Guid("1e94c9a8-6a54-4703-98c2-a393a2208ce0"),
+                            CarId = new Guid("348897f5-935a-4523-b69b-f13e9df249ab"),
                             Name = "A/C"
                         },
                         new
                         {
-                            Id = new Guid("fd67e907-fac2-4f98-86bb-9ae667c39c7c"),
-                            CarId = new Guid("0fd4c75f-f81c-405f-a443-4aea308f41a8"),
+                            Id = new Guid("50481f00-b38c-4ed6-b8a4-f5bb057b2fa3"),
+                            CarId = new Guid("348897f5-935a-4523-b69b-f13e9df249ab"),
                             Name = "Airbags"
                         },
                         new
                         {
-                            Id = new Guid("f45d1b51-6b79-47a6-87e4-91475f51f474"),
-                            CarId = new Guid("0fd4c75f-f81c-405f-a443-4aea308f41a8"),
+                            Id = new Guid("3157782e-e936-437f-bfaf-52ff7271c15e"),
+                            CarId = new Guid("348897f5-935a-4523-b69b-f13e9df249ab"),
                             Name = "Central Locking"
                         },
                         new
                         {
-                            Id = new Guid("f91c8572-a319-42c5-80c7-7fdcbc5d4f1e"),
-                            CarId = new Guid("0fd4c75f-f81c-405f-a443-4aea308f41a8"),
+                            Id = new Guid("72eac944-4910-4054-837e-e356f155f65c"),
+                            CarId = new Guid("348897f5-935a-4523-b69b-f13e9df249ab"),
                             Name = "Electric Windows"
                         },
                         new
                         {
-                            Id = new Guid("121b998a-d639-4673-a27a-6a3afb495d4e"),
-                            CarId = new Guid("9df8f859-4ccf-4039-b6cf-f02fe451bf81"),
+                            Id = new Guid("b3745b9f-327f-4e9b-9cb3-f8cc0e3eb919"),
+                            CarId = new Guid("e2a5c157-5f55-4543-af53-b549a0a9e75b"),
                             Name = "A/C"
                         },
                         new
                         {
-                            Id = new Guid("f09bc760-c393-45c9-8feb-c5bb000980ee"),
-                            CarId = new Guid("9df8f859-4ccf-4039-b6cf-f02fe451bf81"),
+                            Id = new Guid("b55d852e-d4dc-4ad7-927c-bfd2bb15f6cd"),
+                            CarId = new Guid("e2a5c157-5f55-4543-af53-b549a0a9e75b"),
                             Name = "Airbags"
                         },
                         new
                         {
-                            Id = new Guid("3c07a321-7b14-4c38-88d8-dcdd2aa37f01"),
-                            CarId = new Guid("9df8f859-4ccf-4039-b6cf-f02fe451bf81"),
+                            Id = new Guid("b5ae7c6d-0546-47ed-894a-263db255e2cb"),
+                            CarId = new Guid("e2a5c157-5f55-4543-af53-b549a0a9e75b"),
                             Name = "Central Locking"
                         },
                         new
                         {
-                            Id = new Guid("8b632eb0-fc02-454e-b6be-580e6f5ff45f"),
-                            CarId = new Guid("9df8f859-4ccf-4039-b6cf-f02fe451bf81"),
+                            Id = new Guid("93fcdc19-375c-4675-8977-f51d8e7ceec9"),
+                            CarId = new Guid("e2a5c157-5f55-4543-af53-b549a0a9e75b"),
                             Name = "Electric Windows"
                         },
                         new
                         {
-                            Id = new Guid("39597c2d-1ce3-40eb-8259-b17664616290"),
-                            CarId = new Guid("2e618d6b-4536-49d1-aa6a-ba2fe7cff3ad"),
+                            Id = new Guid("fc6565dd-df9c-41a9-a1ea-0dc2f06ef5d3"),
+                            CarId = new Guid("a185a4d2-5fc3-4c53-89d8-45c83e1a815c"),
                             Name = "A/C"
                         },
                         new
                         {
-                            Id = new Guid("8c3d6568-b01e-49af-bd44-d30449596329"),
-                            CarId = new Guid("2e618d6b-4536-49d1-aa6a-ba2fe7cff3ad"),
+                            Id = new Guid("6f76dde6-3e63-47c7-ba64-4f7fd651d5a4"),
+                            CarId = new Guid("a185a4d2-5fc3-4c53-89d8-45c83e1a815c"),
                             Name = "Airbags"
                         },
                         new
                         {
-                            Id = new Guid("6af50e89-a99c-47dd-a105-a7a0a827eeca"),
-                            CarId = new Guid("2e618d6b-4536-49d1-aa6a-ba2fe7cff3ad"),
+                            Id = new Guid("169f5a2c-fdae-4510-aee2-cf4bc61bc184"),
+                            CarId = new Guid("a185a4d2-5fc3-4c53-89d8-45c83e1a815c"),
                             Name = "Central Locking"
                         },
                         new
                         {
-                            Id = new Guid("5d0c7a44-da57-4573-83ce-36f2d1218afc"),
-                            CarId = new Guid("2e618d6b-4536-49d1-aa6a-ba2fe7cff3ad"),
+                            Id = new Guid("c76af3ae-5175-456a-924d-b95d4d48c683"),
+                            CarId = new Guid("a185a4d2-5fc3-4c53-89d8-45c83e1a815c"),
                             Name = "Electric Windows"
                         },
                         new
                         {
-                            Id = new Guid("564495f7-ae5f-45b4-9945-bee352acba0d"),
-                            CarId = new Guid("f58e50dc-9bc7-4948-a88e-2b70223df664"),
+                            Id = new Guid("4d96f1a2-3b7b-4744-88f6-1ba13f1a973a"),
+                            CarId = new Guid("9587fc17-a4c6-487c-be94-b7b6fc9e3678"),
                             Name = "A/C"
                         },
                         new
                         {
-                            Id = new Guid("e14f31c3-3eea-4670-86a2-6b6aa9aadf50"),
-                            CarId = new Guid("f58e50dc-9bc7-4948-a88e-2b70223df664"),
+                            Id = new Guid("83ea80ba-fce6-479d-8ffd-5dc080f4f2e8"),
+                            CarId = new Guid("9587fc17-a4c6-487c-be94-b7b6fc9e3678"),
                             Name = "Airbags"
                         },
                         new
                         {
-                            Id = new Guid("10c63bad-460b-4924-86b3-02358859a511"),
-                            CarId = new Guid("f58e50dc-9bc7-4948-a88e-2b70223df664"),
+                            Id = new Guid("c6b33e51-3901-44b1-8d09-8bb84db6db88"),
+                            CarId = new Guid("9587fc17-a4c6-487c-be94-b7b6fc9e3678"),
                             Name = "Central Locking"
                         },
                         new
                         {
-                            Id = new Guid("92667f3d-5086-49dc-a662-f83ed9a498a5"),
-                            CarId = new Guid("f58e50dc-9bc7-4948-a88e-2b70223df664"),
+                            Id = new Guid("ea9b71fd-7ea7-44ce-b327-9d410bad05f6"),
+                            CarId = new Guid("9587fc17-a4c6-487c-be94-b7b6fc9e3678"),
                             Name = "Electric Windows"
                         },
                         new
                         {
-                            Id = new Guid("eff9e5cc-6137-4d6e-86ba-64e9baeea5b2"),
-                            CarId = new Guid("55ad9be3-f80c-4b9e-aa7d-ce6022c21c02"),
+                            Id = new Guid("bf167d75-a746-4e02-9714-6b7dd00babff"),
+                            CarId = new Guid("a62d2f76-6fe0-4e21-935b-6b0e2d933f01"),
                             Name = "A/C"
                         },
                         new
                         {
-                            Id = new Guid("ded3edac-0901-4e67-aead-5a4eb954bcb8"),
-                            CarId = new Guid("55ad9be3-f80c-4b9e-aa7d-ce6022c21c02"),
+                            Id = new Guid("e17ea914-5082-453d-938c-ff4456aaf0f7"),
+                            CarId = new Guid("a62d2f76-6fe0-4e21-935b-6b0e2d933f01"),
                             Name = "Airbags"
                         },
                         new
                         {
-                            Id = new Guid("830dc659-318b-42ee-96b6-86cd8070b580"),
-                            CarId = new Guid("55ad9be3-f80c-4b9e-aa7d-ce6022c21c02"),
+                            Id = new Guid("31cf6dff-b3c0-4ad7-ae2f-aedea3622eae"),
+                            CarId = new Guid("a62d2f76-6fe0-4e21-935b-6b0e2d933f01"),
                             Name = "Central Locking"
                         },
                         new
                         {
-                            Id = new Guid("2390d361-e454-479c-b976-d3105566b4df"),
-                            CarId = new Guid("55ad9be3-f80c-4b9e-aa7d-ce6022c21c02"),
+                            Id = new Guid("56a0a808-8e86-4470-97a4-9f4060228df0"),
+                            CarId = new Guid("a62d2f76-6fe0-4e21-935b-6b0e2d933f01"),
                             Name = "Electric Windows"
                         },
                         new
                         {
-                            Id = new Guid("9bc6932f-d724-4da9-8292-85c2d82759aa"),
-                            CarId = new Guid("025f9a8a-1266-4dae-bfbc-f4f194a776e7"),
+                            Id = new Guid("48b0b616-ab16-4da8-89e9-bb893f25c4a7"),
+                            CarId = new Guid("4d8c916f-a893-4b71-a472-9dd2a47f0a50"),
                             Name = "A/C"
                         },
                         new
                         {
-                            Id = new Guid("674d5f72-5cc2-4ad4-a22e-fcd14f798721"),
-                            CarId = new Guid("025f9a8a-1266-4dae-bfbc-f4f194a776e7"),
+                            Id = new Guid("d7bd88e9-b896-49c0-9347-ff8dae64fede"),
+                            CarId = new Guid("4d8c916f-a893-4b71-a472-9dd2a47f0a50"),
                             Name = "Airbags"
                         },
                         new
                         {
-                            Id = new Guid("d8c0925a-f6ac-4e7d-8074-3c99ff2a5d48"),
-                            CarId = new Guid("025f9a8a-1266-4dae-bfbc-f4f194a776e7"),
+                            Id = new Guid("77d363e0-6968-4258-aea6-a468ab7090d4"),
+                            CarId = new Guid("4d8c916f-a893-4b71-a472-9dd2a47f0a50"),
                             Name = "Central Locking"
                         },
                         new
                         {
-                            Id = new Guid("355a3842-4f37-47f0-ad7a-9c60a7b57ca1"),
-                            CarId = new Guid("025f9a8a-1266-4dae-bfbc-f4f194a776e7"),
+                            Id = new Guid("682baafe-8403-4c09-9d6f-eeea43c933cb"),
+                            CarId = new Guid("4d8c916f-a893-4b71-a472-9dd2a47f0a50"),
                             Name = "Electric Windows"
                         },
                         new
                         {
-                            Id = new Guid("4441721a-b5af-4a79-9f29-01d32f011115"),
-                            CarId = new Guid("264259ad-40a2-4d6f-a960-0084fe09ed21"),
+                            Id = new Guid("77d22e70-8233-47c9-a89e-5fa949b950d4"),
+                            CarId = new Guid("9a79c6e7-38ca-4c94-81c9-9d359fa692f6"),
                             Name = "A/C"
                         },
                         new
                         {
-                            Id = new Guid("8d3d19cf-4550-4000-ace5-371d977f2e28"),
-                            CarId = new Guid("264259ad-40a2-4d6f-a960-0084fe09ed21"),
+                            Id = new Guid("c17a1a7e-59c1-4c3f-9ab3-552c14d762b2"),
+                            CarId = new Guid("9a79c6e7-38ca-4c94-81c9-9d359fa692f6"),
                             Name = "Airbags"
                         },
                         new
                         {
-                            Id = new Guid("a102ee4a-3cf9-498b-ae09-1f61cb806cfa"),
-                            CarId = new Guid("264259ad-40a2-4d6f-a960-0084fe09ed21"),
+                            Id = new Guid("78e95788-f6c7-4446-b499-070e3b98b1a4"),
+                            CarId = new Guid("9a79c6e7-38ca-4c94-81c9-9d359fa692f6"),
                             Name = "Central Locking"
                         },
                         new
                         {
-                            Id = new Guid("cd7c5070-b9c0-4c73-9505-99a33c5edf27"),
-                            CarId = new Guid("264259ad-40a2-4d6f-a960-0084fe09ed21"),
+                            Id = new Guid("a3961e2a-fe54-434b-aded-99485bd2d90d"),
+                            CarId = new Guid("9a79c6e7-38ca-4c94-81c9-9d359fa692f6"),
                             Name = "Electric Windows"
                         },
                         new
                         {
-                            Id = new Guid("a3ee25d7-cdc8-4d39-849a-52d8181abd01"),
-                            CarId = new Guid("42d13d9b-92c1-459d-a6bb-33a28b800996"),
+                            Id = new Guid("444e8b11-75e7-4964-b1ce-42883b9185f2"),
+                            CarId = new Guid("bcba206b-c474-48d8-85b1-5bf3a09891a1"),
                             Name = "A/C"
                         },
                         new
                         {
-                            Id = new Guid("b9a6381e-e935-4a6d-82ef-c4edea93986a"),
-                            CarId = new Guid("42d13d9b-92c1-459d-a6bb-33a28b800996"),
+                            Id = new Guid("92746b75-1b14-4a2f-b0ab-d9c1c80061cb"),
+                            CarId = new Guid("bcba206b-c474-48d8-85b1-5bf3a09891a1"),
                             Name = "Airbags"
                         },
                         new
                         {
-                            Id = new Guid("ec2d9569-d6d4-4f61-a958-a5c8df92ff43"),
-                            CarId = new Guid("42d13d9b-92c1-459d-a6bb-33a28b800996"),
+                            Id = new Guid("6eb27f45-7283-46d2-bae6-f4ef62b2c964"),
+                            CarId = new Guid("bcba206b-c474-48d8-85b1-5bf3a09891a1"),
                             Name = "Central Locking"
                         },
                         new
                         {
-                            Id = new Guid("d28661b6-72d9-4feb-bf92-df7def4bdb23"),
-                            CarId = new Guid("42d13d9b-92c1-459d-a6bb-33a28b800996"),
+                            Id = new Guid("cb906912-480e-4180-a0dd-7a0bbdcc4604"),
+                            CarId = new Guid("bcba206b-c474-48d8-85b1-5bf3a09891a1"),
                             Name = "Electric Windows"
                         },
                         new
                         {
-                            Id = new Guid("44bcf259-fa2c-4475-926d-2299910cca24"),
-                            CarId = new Guid("ec6d5d08-718b-486b-997b-ff449eaae86d"),
+                            Id = new Guid("ad38ae4d-731b-4bbe-bbe1-f94fd8d6e336"),
+                            CarId = new Guid("44043075-a6cb-46f2-aadf-f3e1d610b8b0"),
                             Name = "A/C"
                         },
                         new
                         {
-                            Id = new Guid("aea1909a-a288-478f-92f8-ec781a0fe2c7"),
-                            CarId = new Guid("ec6d5d08-718b-486b-997b-ff449eaae86d"),
+                            Id = new Guid("3908abaf-9ee6-48a3-814c-6d919e8c3713"),
+                            CarId = new Guid("44043075-a6cb-46f2-aadf-f3e1d610b8b0"),
                             Name = "Airbags"
                         },
                         new
                         {
-                            Id = new Guid("50149a75-7a92-4045-9c5c-5df9490b051a"),
-                            CarId = new Guid("ec6d5d08-718b-486b-997b-ff449eaae86d"),
+                            Id = new Guid("d98a0eeb-ae20-42c7-ad4f-82fd7b206499"),
+                            CarId = new Guid("44043075-a6cb-46f2-aadf-f3e1d610b8b0"),
                             Name = "Central Locking"
                         },
                         new
                         {
-                            Id = new Guid("90e8cc31-9924-418f-b4c6-6cf8922d33b2"),
-                            CarId = new Guid("ec6d5d08-718b-486b-997b-ff449eaae86d"),
+                            Id = new Guid("34a8c490-0f35-4a18-92f5-6d2f6be82a5f"),
+                            CarId = new Guid("44043075-a6cb-46f2-aadf-f3e1d610b8b0"),
                             Name = "Electric Windows"
                         });
                 });
@@ -547,27 +547,27 @@ namespace CarRentalSystem.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2788532a-e414-4578-b6a4-e7ae68d0d8ae"),
+                            Id = new Guid("5325d50a-c054-42c2-a3f2-7dde39ae8721"),
                             Name = "Economy"
                         },
                         new
                         {
-                            Id = new Guid("61b24e6a-5f4e-41ae-a1ae-44a4dc427c71"),
+                            Id = new Guid("44a0794d-5360-42ba-a276-a1b4cac7ff6e"),
                             Name = "Standard"
                         },
                         new
                         {
-                            Id = new Guid("8efea0c7-de81-4fb2-9a5c-0e226d7fc286"),
+                            Id = new Guid("006c7f03-2944-472c-9d78-9bb42c841c9c"),
                             Name = "Luxury"
                         },
                         new
                         {
-                            Id = new Guid("1f8a5710-da48-4589-a7d4-88826d09e10e"),
+                            Id = new Guid("5f6b83b4-a93e-4a9d-8e46-46a4977c69a9"),
                             Name = "Business"
                         },
                         new
                         {
-                            Id = new Guid("314be868-8e21-45a6-b328-f0ea565bcf4f"),
+                            Id = new Guid("f1e8e72b-e7eb-45b6-b288-9559047444db"),
                             Name = "Family"
                         });
                 });
@@ -624,400 +624,400 @@ namespace CarRentalSystem.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5658fd35-0090-40ea-85ae-aee51d43b1c2"),
-                            CarId = new Guid("4821964e-a04c-49d0-961a-9fcdfdea0816"),
+                            Id = new Guid("e03c2ac6-ddf9-4474-870e-4c5abde1fb10"),
+                            CarId = new Guid("8039d225-76e1-4477-8236-e5c354153f91"),
                             MaxDays = 3,
                             MinDays = 1,
                             PricePerDay = 12m
                         },
                         new
                         {
-                            Id = new Guid("afa31e51-ce85-42d5-a6e8-5aeacf9ff631"),
-                            CarId = new Guid("4821964e-a04c-49d0-961a-9fcdfdea0816"),
+                            Id = new Guid("df2f1940-ac65-40b3-9c87-9573b4dc35e7"),
+                            CarId = new Guid("8039d225-76e1-4477-8236-e5c354153f91"),
                             MaxDays = 10,
                             MinDays = 4,
                             PricePerDay = 10.8m
                         },
                         new
                         {
-                            Id = new Guid("007e177b-aa00-4250-947a-ab7502a00285"),
-                            CarId = new Guid("4821964e-a04c-49d0-961a-9fcdfdea0816"),
+                            Id = new Guid("5ec8349c-4c83-4180-a784-cf6b38464043"),
+                            CarId = new Guid("8039d225-76e1-4477-8236-e5c354153f91"),
                             MaxDays = 15,
                             MinDays = 11,
                             PricePerDay = 10.20m
                         },
                         new
                         {
-                            Id = new Guid("a068ebb9-4267-478d-9d25-0a89884d26d9"),
-                            CarId = new Guid("4821964e-a04c-49d0-961a-9fcdfdea0816"),
+                            Id = new Guid("a715d5db-6b5e-4db6-b263-1e4d8470836d"),
+                            CarId = new Guid("8039d225-76e1-4477-8236-e5c354153f91"),
                             MaxDays = 20,
                             MinDays = 16,
                             PricePerDay = 9.6m
                         },
                         new
                         {
-                            Id = new Guid("0c86b921-423c-4b4c-966d-8e53c460900a"),
-                            CarId = new Guid("4821964e-a04c-49d0-961a-9fcdfdea0816"),
+                            Id = new Guid("8a09bffe-9bdf-4153-800a-01416887f970"),
+                            CarId = new Guid("8039d225-76e1-4477-8236-e5c354153f91"),
                             MaxDays = 365,
                             MinDays = 21,
                             PricePerDay = 9.00m
                         },
                         new
                         {
-                            Id = new Guid("56809fbe-4766-41cc-ae40-dd6da55f0a3d"),
-                            CarId = new Guid("0fd4c75f-f81c-405f-a443-4aea308f41a8"),
+                            Id = new Guid("ea4b7f50-4ce6-4806-8383-85787fea5c93"),
+                            CarId = new Guid("348897f5-935a-4523-b69b-f13e9df249ab"),
                             MaxDays = 3,
                             MinDays = 1,
                             PricePerDay = 10m
                         },
                         new
                         {
-                            Id = new Guid("d41df52f-6afe-4fca-bef8-976bfaf2d002"),
-                            CarId = new Guid("0fd4c75f-f81c-405f-a443-4aea308f41a8"),
+                            Id = new Guid("eeee6195-f8ae-4566-9957-183239b2cce5"),
+                            CarId = new Guid("348897f5-935a-4523-b69b-f13e9df249ab"),
                             MaxDays = 10,
                             MinDays = 4,
                             PricePerDay = 9.0m
                         },
                         new
                         {
-                            Id = new Guid("2f8298db-4b21-4aa9-a9ef-d44562c629bf"),
-                            CarId = new Guid("0fd4c75f-f81c-405f-a443-4aea308f41a8"),
+                            Id = new Guid("c8887c64-87df-44ec-a5a9-5311ba94abd9"),
+                            CarId = new Guid("348897f5-935a-4523-b69b-f13e9df249ab"),
                             MaxDays = 15,
                             MinDays = 11,
                             PricePerDay = 8.50m
                         },
                         new
                         {
-                            Id = new Guid("c1853def-69ef-487b-abe2-b09727582c4e"),
-                            CarId = new Guid("0fd4c75f-f81c-405f-a443-4aea308f41a8"),
+                            Id = new Guid("5b228642-a53f-43b2-82b7-6570199b9faf"),
+                            CarId = new Guid("348897f5-935a-4523-b69b-f13e9df249ab"),
                             MaxDays = 20,
                             MinDays = 16,
                             PricePerDay = 8.0m
                         },
                         new
                         {
-                            Id = new Guid("6644c8c3-7b69-4cab-8d26-c2eada777b8a"),
-                            CarId = new Guid("0fd4c75f-f81c-405f-a443-4aea308f41a8"),
+                            Id = new Guid("b16529cc-e108-41ae-809f-e7e622587447"),
+                            CarId = new Guid("348897f5-935a-4523-b69b-f13e9df249ab"),
                             MaxDays = 365,
                             MinDays = 21,
                             PricePerDay = 7.50m
                         },
                         new
                         {
-                            Id = new Guid("00da3661-f0d1-4b50-8d71-8951c5dbb2a7"),
-                            CarId = new Guid("9df8f859-4ccf-4039-b6cf-f02fe451bf81"),
+                            Id = new Guid("a1e16edc-6c38-4f68-be66-95eba8ffdc72"),
+                            CarId = new Guid("e2a5c157-5f55-4543-af53-b549a0a9e75b"),
                             MaxDays = 3,
                             MinDays = 1,
                             PricePerDay = 18m
                         },
                         new
                         {
-                            Id = new Guid("f059c689-d8fd-4127-81fe-15b674d16165"),
-                            CarId = new Guid("9df8f859-4ccf-4039-b6cf-f02fe451bf81"),
+                            Id = new Guid("2271d4c7-ae33-4bfa-b81a-dae1f06b79b9"),
+                            CarId = new Guid("e2a5c157-5f55-4543-af53-b549a0a9e75b"),
                             MaxDays = 10,
                             MinDays = 4,
                             PricePerDay = 16.2m
                         },
                         new
                         {
-                            Id = new Guid("12b29e97-eae5-484e-a488-a39cdc47cc93"),
-                            CarId = new Guid("9df8f859-4ccf-4039-b6cf-f02fe451bf81"),
+                            Id = new Guid("c23adba4-f770-4e03-9aac-0fa3a81c2fc2"),
+                            CarId = new Guid("e2a5c157-5f55-4543-af53-b549a0a9e75b"),
                             MaxDays = 15,
                             MinDays = 11,
                             PricePerDay = 15.30m
                         },
                         new
                         {
-                            Id = new Guid("15461d17-e243-4142-bb75-92ff4f88385d"),
-                            CarId = new Guid("9df8f859-4ccf-4039-b6cf-f02fe451bf81"),
+                            Id = new Guid("1dea457f-92c3-4a95-9e47-00218af2092d"),
+                            CarId = new Guid("e2a5c157-5f55-4543-af53-b549a0a9e75b"),
                             MaxDays = 20,
                             MinDays = 16,
                             PricePerDay = 14.4m
                         },
                         new
                         {
-                            Id = new Guid("f38eae32-8347-4e24-9779-263b450d2c9b"),
-                            CarId = new Guid("9df8f859-4ccf-4039-b6cf-f02fe451bf81"),
+                            Id = new Guid("86b3ba12-8236-485c-a7c0-9e8970d35779"),
+                            CarId = new Guid("e2a5c157-5f55-4543-af53-b549a0a9e75b"),
                             MaxDays = 365,
                             MinDays = 21,
                             PricePerDay = 13.50m
                         },
                         new
                         {
-                            Id = new Guid("a3e6bbcf-9318-4f00-9726-e49411731ff1"),
-                            CarId = new Guid("2e618d6b-4536-49d1-aa6a-ba2fe7cff3ad"),
+                            Id = new Guid("34395a06-535c-4c82-a5d4-5113b2f987eb"),
+                            CarId = new Guid("a185a4d2-5fc3-4c53-89d8-45c83e1a815c"),
                             MaxDays = 3,
                             MinDays = 1,
                             PricePerDay = 17m
                         },
                         new
                         {
-                            Id = new Guid("574d07ec-564c-4f42-8eee-ef279c86d6fe"),
-                            CarId = new Guid("2e618d6b-4536-49d1-aa6a-ba2fe7cff3ad"),
+                            Id = new Guid("d1a85e79-d7e3-44fc-80da-b6653d350648"),
+                            CarId = new Guid("a185a4d2-5fc3-4c53-89d8-45c83e1a815c"),
                             MaxDays = 10,
                             MinDays = 4,
                             PricePerDay = 15.3m
                         },
                         new
                         {
-                            Id = new Guid("a5c44dab-9b7e-41d0-b2bb-284e737bd4a1"),
-                            CarId = new Guid("2e618d6b-4536-49d1-aa6a-ba2fe7cff3ad"),
+                            Id = new Guid("65af53d4-aee8-4b5a-b6e1-31a9d39cfc19"),
+                            CarId = new Guid("a185a4d2-5fc3-4c53-89d8-45c83e1a815c"),
                             MaxDays = 15,
                             MinDays = 11,
                             PricePerDay = 14.45m
                         },
                         new
                         {
-                            Id = new Guid("a555b82f-3272-44d0-b6e0-6d77a7716d40"),
-                            CarId = new Guid("2e618d6b-4536-49d1-aa6a-ba2fe7cff3ad"),
+                            Id = new Guid("6d88bdd4-9ccc-422c-a20d-e71ee8cfca25"),
+                            CarId = new Guid("a185a4d2-5fc3-4c53-89d8-45c83e1a815c"),
                             MaxDays = 20,
                             MinDays = 16,
                             PricePerDay = 13.6m
                         },
                         new
                         {
-                            Id = new Guid("f092dfdd-0a58-40c5-bd42-8d5a9d2e128a"),
-                            CarId = new Guid("2e618d6b-4536-49d1-aa6a-ba2fe7cff3ad"),
+                            Id = new Guid("0d5bbe3b-f54c-4694-808f-c0d89af75a61"),
+                            CarId = new Guid("a185a4d2-5fc3-4c53-89d8-45c83e1a815c"),
                             MaxDays = 365,
                             MinDays = 21,
                             PricePerDay = 12.75m
                         },
                         new
                         {
-                            Id = new Guid("a278987f-b2ba-4d74-a62d-1c34f3b64a24"),
-                            CarId = new Guid("f58e50dc-9bc7-4948-a88e-2b70223df664"),
+                            Id = new Guid("cf834d92-f7c7-4760-bb3a-ac00b45be4d8"),
+                            CarId = new Guid("9587fc17-a4c6-487c-be94-b7b6fc9e3678"),
                             MaxDays = 3,
                             MinDays = 1,
                             PricePerDay = 25m
                         },
                         new
                         {
-                            Id = new Guid("4246290c-6449-4101-8415-f5d7b3563c9f"),
-                            CarId = new Guid("f58e50dc-9bc7-4948-a88e-2b70223df664"),
+                            Id = new Guid("fb5d0f43-1227-41de-9303-1531c3d16df5"),
+                            CarId = new Guid("9587fc17-a4c6-487c-be94-b7b6fc9e3678"),
                             MaxDays = 10,
                             MinDays = 4,
                             PricePerDay = 22.5m
                         },
                         new
                         {
-                            Id = new Guid("8ea9341a-fc36-406c-b306-c33bb73ab6bc"),
-                            CarId = new Guid("f58e50dc-9bc7-4948-a88e-2b70223df664"),
+                            Id = new Guid("53de1a13-41eb-48a9-b340-8181bb9f7adb"),
+                            CarId = new Guid("9587fc17-a4c6-487c-be94-b7b6fc9e3678"),
                             MaxDays = 15,
                             MinDays = 11,
                             PricePerDay = 21.25m
                         },
                         new
                         {
-                            Id = new Guid("b70636fc-55fc-4b0a-9927-c42bfc10875e"),
-                            CarId = new Guid("f58e50dc-9bc7-4948-a88e-2b70223df664"),
+                            Id = new Guid("ee514a9d-7f0a-4c22-a1c3-76af8caaedd2"),
+                            CarId = new Guid("9587fc17-a4c6-487c-be94-b7b6fc9e3678"),
                             MaxDays = 20,
                             MinDays = 16,
                             PricePerDay = 20.0m
                         },
                         new
                         {
-                            Id = new Guid("c1368b3e-28ef-4dbe-8460-9e82531f95f3"),
-                            CarId = new Guid("f58e50dc-9bc7-4948-a88e-2b70223df664"),
+                            Id = new Guid("8d7a200c-c904-4e2c-8baa-4fff7432764b"),
+                            CarId = new Guid("9587fc17-a4c6-487c-be94-b7b6fc9e3678"),
                             MaxDays = 365,
                             MinDays = 21,
                             PricePerDay = 18.75m
                         },
                         new
                         {
-                            Id = new Guid("5c867eb0-269c-45a9-b66f-3b1c69f6492e"),
-                            CarId = new Guid("55ad9be3-f80c-4b9e-aa7d-ce6022c21c02"),
+                            Id = new Guid("3567fd71-7065-4b00-850f-ff5f9d12b5d6"),
+                            CarId = new Guid("a62d2f76-6fe0-4e21-935b-6b0e2d933f01"),
                             MaxDays = 3,
                             MinDays = 1,
                             PricePerDay = 27m
                         },
                         new
                         {
-                            Id = new Guid("e78ad0d2-9f2c-4bd1-a3a3-7fa9eecf1cfe"),
-                            CarId = new Guid("55ad9be3-f80c-4b9e-aa7d-ce6022c21c02"),
+                            Id = new Guid("f28a1667-2a7d-405e-8ece-2080f7dd641a"),
+                            CarId = new Guid("a62d2f76-6fe0-4e21-935b-6b0e2d933f01"),
                             MaxDays = 10,
                             MinDays = 4,
                             PricePerDay = 24.3m
                         },
                         new
                         {
-                            Id = new Guid("4d955e69-d870-48b4-8092-25b7f70bf682"),
-                            CarId = new Guid("55ad9be3-f80c-4b9e-aa7d-ce6022c21c02"),
+                            Id = new Guid("da21779d-f893-4aff-8e1d-43100d2a25d7"),
+                            CarId = new Guid("a62d2f76-6fe0-4e21-935b-6b0e2d933f01"),
                             MaxDays = 15,
                             MinDays = 11,
                             PricePerDay = 22.95m
                         },
                         new
                         {
-                            Id = new Guid("903eeb58-56cd-4e78-82e9-0e6282576a83"),
-                            CarId = new Guid("55ad9be3-f80c-4b9e-aa7d-ce6022c21c02"),
+                            Id = new Guid("3156b2d5-4318-4da6-a610-d49667e12272"),
+                            CarId = new Guid("a62d2f76-6fe0-4e21-935b-6b0e2d933f01"),
                             MaxDays = 20,
                             MinDays = 16,
                             PricePerDay = 21.6m
                         },
                         new
                         {
-                            Id = new Guid("f7cd8260-c305-4969-9647-c086e41a3827"),
-                            CarId = new Guid("55ad9be3-f80c-4b9e-aa7d-ce6022c21c02"),
+                            Id = new Guid("2ee69fb1-dce1-43c1-b3e6-3f5889acc6a0"),
+                            CarId = new Guid("a62d2f76-6fe0-4e21-935b-6b0e2d933f01"),
                             MaxDays = 365,
                             MinDays = 21,
                             PricePerDay = 20.25m
                         },
                         new
                         {
-                            Id = new Guid("16982966-88dd-4b9b-b936-e0d86e254f36"),
-                            CarId = new Guid("025f9a8a-1266-4dae-bfbc-f4f194a776e7"),
+                            Id = new Guid("9c7cfe52-6293-4217-961f-e30ec670ca38"),
+                            CarId = new Guid("4d8c916f-a893-4b71-a472-9dd2a47f0a50"),
                             MaxDays = 3,
                             MinDays = 1,
                             PricePerDay = 85m
                         },
                         new
                         {
-                            Id = new Guid("44a06d42-c1e1-42df-869d-80ba452a6769"),
-                            CarId = new Guid("025f9a8a-1266-4dae-bfbc-f4f194a776e7"),
+                            Id = new Guid("f0ee34ca-4bc8-4f71-9a1e-ee53cc83ba9f"),
+                            CarId = new Guid("4d8c916f-a893-4b71-a472-9dd2a47f0a50"),
                             MaxDays = 10,
                             MinDays = 4,
                             PricePerDay = 76.5m
                         },
                         new
                         {
-                            Id = new Guid("a260f200-66ce-4377-9a9d-a2f4e18d13fe"),
-                            CarId = new Guid("025f9a8a-1266-4dae-bfbc-f4f194a776e7"),
+                            Id = new Guid("a2e0a90c-d7db-4c27-8b55-d0a0e69708f1"),
+                            CarId = new Guid("4d8c916f-a893-4b71-a472-9dd2a47f0a50"),
                             MaxDays = 15,
                             MinDays = 11,
                             PricePerDay = 72.25m
                         },
                         new
                         {
-                            Id = new Guid("9b355c43-eecf-4a5b-844b-9028aa9f63c0"),
-                            CarId = new Guid("025f9a8a-1266-4dae-bfbc-f4f194a776e7"),
+                            Id = new Guid("a4cbcff0-3510-4fa6-bd58-ff20b3e63cb6"),
+                            CarId = new Guid("4d8c916f-a893-4b71-a472-9dd2a47f0a50"),
                             MaxDays = 20,
                             MinDays = 16,
                             PricePerDay = 68.0m
                         },
                         new
                         {
-                            Id = new Guid("74ecd453-a249-4015-871c-11ba98cae745"),
-                            CarId = new Guid("025f9a8a-1266-4dae-bfbc-f4f194a776e7"),
+                            Id = new Guid("5d751021-c45f-48b5-a04d-6bf4019202bd"),
+                            CarId = new Guid("4d8c916f-a893-4b71-a472-9dd2a47f0a50"),
                             MaxDays = 365,
                             MinDays = 21,
                             PricePerDay = 63.75m
                         },
                         new
                         {
-                            Id = new Guid("806fa1ab-fb76-4847-a29c-3505a05adca3"),
-                            CarId = new Guid("264259ad-40a2-4d6f-a960-0084fe09ed21"),
+                            Id = new Guid("cc298124-08df-48ad-b4a7-190d1a7b5ac2"),
+                            CarId = new Guid("9a79c6e7-38ca-4c94-81c9-9d359fa692f6"),
                             MaxDays = 3,
                             MinDays = 1,
                             PricePerDay = 80m
                         },
                         new
                         {
-                            Id = new Guid("ff9afb9c-9071-47f6-bcdc-0c3f34b4e7da"),
-                            CarId = new Guid("264259ad-40a2-4d6f-a960-0084fe09ed21"),
+                            Id = new Guid("6dff2f51-bcd9-4a59-bead-01c9bca9e024"),
+                            CarId = new Guid("9a79c6e7-38ca-4c94-81c9-9d359fa692f6"),
                             MaxDays = 10,
                             MinDays = 4,
                             PricePerDay = 72.0m
                         },
                         new
                         {
-                            Id = new Guid("cc96a8e2-3a95-4bfb-966f-dfb5b87a3253"),
-                            CarId = new Guid("264259ad-40a2-4d6f-a960-0084fe09ed21"),
+                            Id = new Guid("8ec44ac9-a8ef-483f-b997-8e6a171a2cce"),
+                            CarId = new Guid("9a79c6e7-38ca-4c94-81c9-9d359fa692f6"),
                             MaxDays = 15,
                             MinDays = 11,
                             PricePerDay = 68.00m
                         },
                         new
                         {
-                            Id = new Guid("c84d561e-b81b-474e-aa13-f3fa916fb384"),
-                            CarId = new Guid("264259ad-40a2-4d6f-a960-0084fe09ed21"),
+                            Id = new Guid("9fdd37b5-011f-423f-95bc-b3ca64ea697f"),
+                            CarId = new Guid("9a79c6e7-38ca-4c94-81c9-9d359fa692f6"),
                             MaxDays = 20,
                             MinDays = 16,
                             PricePerDay = 64.0m
                         },
                         new
                         {
-                            Id = new Guid("860cf1ee-5b6a-49c9-b893-e4d971d0b26c"),
-                            CarId = new Guid("264259ad-40a2-4d6f-a960-0084fe09ed21"),
+                            Id = new Guid("a3332580-33a6-45da-856c-6fd284553b89"),
+                            CarId = new Guid("9a79c6e7-38ca-4c94-81c9-9d359fa692f6"),
                             MaxDays = 365,
                             MinDays = 21,
                             PricePerDay = 60.00m
                         },
                         new
                         {
-                            Id = new Guid("3133fb4a-57a8-4982-bed2-4344b7c74893"),
-                            CarId = new Guid("42d13d9b-92c1-459d-a6bb-33a28b800996"),
+                            Id = new Guid("60fe7e9c-c455-466a-9d76-c11e87b4e3bd"),
+                            CarId = new Guid("bcba206b-c474-48d8-85b1-5bf3a09891a1"),
                             MaxDays = 3,
                             MinDays = 1,
                             PricePerDay = 40m
                         },
                         new
                         {
-                            Id = new Guid("f30c1894-dcf3-4baa-b128-f55d726d2335"),
-                            CarId = new Guid("42d13d9b-92c1-459d-a6bb-33a28b800996"),
+                            Id = new Guid("c72c9545-4f57-4ea6-a792-e0bc8b5818c9"),
+                            CarId = new Guid("bcba206b-c474-48d8-85b1-5bf3a09891a1"),
                             MaxDays = 10,
                             MinDays = 4,
                             PricePerDay = 36.0m
                         },
                         new
                         {
-                            Id = new Guid("159e7fbb-0688-4737-a814-81e145bc908e"),
-                            CarId = new Guid("42d13d9b-92c1-459d-a6bb-33a28b800996"),
+                            Id = new Guid("659efff6-8f28-475a-a8de-dbff76851a2f"),
+                            CarId = new Guid("bcba206b-c474-48d8-85b1-5bf3a09891a1"),
                             MaxDays = 15,
                             MinDays = 11,
                             PricePerDay = 34.00m
                         },
                         new
                         {
-                            Id = new Guid("85390edd-67f4-43c7-9e3f-1fb60d2d168c"),
-                            CarId = new Guid("42d13d9b-92c1-459d-a6bb-33a28b800996"),
+                            Id = new Guid("b7463c76-6b5c-4ede-98c6-495c6545121b"),
+                            CarId = new Guid("bcba206b-c474-48d8-85b1-5bf3a09891a1"),
                             MaxDays = 20,
                             MinDays = 16,
                             PricePerDay = 32.0m
                         },
                         new
                         {
-                            Id = new Guid("bc755162-7ef1-4a41-838c-dc13bec52451"),
-                            CarId = new Guid("42d13d9b-92c1-459d-a6bb-33a28b800996"),
+                            Id = new Guid("c8585406-13fa-4c6c-b19e-62e28d1efdc1"),
+                            CarId = new Guid("bcba206b-c474-48d8-85b1-5bf3a09891a1"),
                             MaxDays = 365,
                             MinDays = 21,
                             PricePerDay = 30.00m
                         },
                         new
                         {
-                            Id = new Guid("f43414b7-5109-4b4c-9499-c8bee51afb4b"),
-                            CarId = new Guid("ec6d5d08-718b-486b-997b-ff449eaae86d"),
+                            Id = new Guid("2dc92b7b-1831-434d-bac6-983b4506a075"),
+                            CarId = new Guid("44043075-a6cb-46f2-aadf-f3e1d610b8b0"),
                             MaxDays = 3,
                             MinDays = 1,
                             PricePerDay = 38m
                         },
                         new
                         {
-                            Id = new Guid("9835f13b-408f-42a4-96b5-8927597f8429"),
-                            CarId = new Guid("ec6d5d08-718b-486b-997b-ff449eaae86d"),
+                            Id = new Guid("7b64b5da-59ba-4358-9b18-fc8216ee537f"),
+                            CarId = new Guid("44043075-a6cb-46f2-aadf-f3e1d610b8b0"),
                             MaxDays = 10,
                             MinDays = 4,
                             PricePerDay = 34.2m
                         },
                         new
                         {
-                            Id = new Guid("12da5704-248d-4a4b-89f4-1bf812fcf7a8"),
-                            CarId = new Guid("ec6d5d08-718b-486b-997b-ff449eaae86d"),
+                            Id = new Guid("e3e233b3-1999-48c3-922a-f3cb120c3f99"),
+                            CarId = new Guid("44043075-a6cb-46f2-aadf-f3e1d610b8b0"),
                             MaxDays = 15,
                             MinDays = 11,
                             PricePerDay = 32.30m
                         },
                         new
                         {
-                            Id = new Guid("72acedb8-7e4f-4ff9-b24b-807997b94048"),
-                            CarId = new Guid("ec6d5d08-718b-486b-997b-ff449eaae86d"),
+                            Id = new Guid("3b2b29cb-c31f-4525-a092-ab7c77bc91d4"),
+                            CarId = new Guid("44043075-a6cb-46f2-aadf-f3e1d610b8b0"),
                             MaxDays = 20,
                             MinDays = 16,
                             PricePerDay = 30.4m
                         },
                         new
                         {
-                            Id = new Guid("d6dd9da5-bcfc-4bf5-b219-e11ea459b395"),
-                            CarId = new Guid("ec6d5d08-718b-486b-997b-ff449eaae86d"),
+                            Id = new Guid("3c5c902e-bede-4033-a520-13547a108954"),
+                            CarId = new Guid("44043075-a6cb-46f2-aadf-f3e1d610b8b0"),
                             MaxDays = 365,
                             MinDays = 21,
                             PricePerDay = 28.50m
@@ -1376,7 +1376,7 @@ namespace CarRentalSystem.Migrations
             modelBuilder.Entity("CarRentalSystem.Models.Reservation", b =>
                 {
                     b.HasOne("CarRentalSystem.Models.Car", "Car")
-                        .WithMany()
+                        .WithMany("Reservations")
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1461,6 +1461,8 @@ namespace CarRentalSystem.Migrations
                     b.Navigation("Features");
 
                     b.Navigation("PricingTiers");
+
+                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("CarRentalSystem.Models.CarClass", b =>

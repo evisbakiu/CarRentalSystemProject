@@ -7,14 +7,21 @@
         <div class="card-body">
             <h4 class="card-title text-primary">@Model.Car?.Name</h4>
             <p class="text-muted">
-                <strong>Car Class:</strong> @Model.Car?.Class.Name <br />
+                <strong>Car Class:</strong> @Model.Car?.Class?.Name <br />
                 <strong>Pick-Up Date:</strong> @Model.StartDate.ToString("dd/MM/yyyy") <br />
                 <strong>Return Date:</strong> @Model.EndDate.ToString("dd/MM/yyyy") <br />
                 <strong>Total Cost:</strong> € @Model.TotalCost.ToString("F2") <br />
                 <strong>Status:</strong>
-                <span class="badge @GetStatusClass(Model.Status?.Name)">
-                    @Model.Status?.Name
-                </span>
+                @if (Model.Status != null)
+                {
+                    <span class="badge @GetStatusClass(Model.Status.Name)">
+                        @Model.Status.Name
+                    </span>
+                }
+                else
+                {
+                    <span class="badge badge-secondary">No Status</span>
+                }
             </p>
             <hr />
             <h5 class="text-primary">Pickup & Return Locations</h5>
@@ -69,6 +76,27 @@
             background-color: #FFA500;
             color: white;
         }
+
+    /* Badge Styling */
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: black;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .badge-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
 </style>
 
 @functions {

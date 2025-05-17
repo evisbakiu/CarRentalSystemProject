@@ -134,12 +134,12 @@ namespace CarRentalSystem.Controllers
             ViewBag.Classes = _context.CarClass.ToList();
             ViewBag.Features = _context.CarFeature.Select(f => f.Name).Distinct().ToList();
             ViewBag.FuelTypes = new List<SelectListItem>
-    {
-        new SelectListItem { Value = "Petrol", Text = "Petrol" },
-        new SelectListItem { Value = "Diesel", Text = "Diesel" },
-        new SelectListItem { Value = "Hybrid", Text = "Hybrid" },
-        new SelectListItem { Value = "Electric", Text = "Electric" }
-    };
+            {
+                new SelectListItem { Value = "Petrol", Text = "Petrol" },
+                new SelectListItem { Value = "Diesel", Text = "Diesel" },
+                new SelectListItem { Value = "Hybrid", Text = "Hybrid" },
+                new SelectListItem { Value = "Electric", Text = "Electric" }
+            };
 
             return View("AddOrEditCar", car);
         }
@@ -152,7 +152,6 @@ namespace CarRentalSystem.Controllers
             {
                 ViewBag.Categories = _context.Category.ToList();
                 ViewBag.Classes = _context.CarClass.ToList();
-                ViewBag.Features = _context.CarFeature.Select(f => f.Name).Distinct().ToList();
                 ViewBag.FuelTypes = new List<SelectListItem>
         {
             new SelectListItem { Value = "Petrol", Text = "Petrol" },
@@ -160,35 +159,41 @@ namespace CarRentalSystem.Controllers
             new SelectListItem { Value = "Hybrid", Text = "Hybrid" },
             new SelectListItem { Value = "Electric", Text = "Electric" }
         };
-
                 return View("AddOrEditCar", car);
             }
 
-            var existingCar = await _context.Car
-                .Include(c => c.PricingTiers)
-                .FirstOrDefaultAsync(c => c.Id == car.Id);
+            var existingCar = await _context.Car.Include(c => c.PricingTiers).FirstOrDefaultAsync(c => c.Id == car.Id);
 
             if (existingCar == null)
             {
                 return NotFound();
             }
 
+            // Update basic car properties
             existingCar.Name = car.Name;
             existingCar.LicensePlate = car.LicensePlate;
             existingCar.Year = car.Year;
-            existingCar.PricePerDay = car.PricePerDay;
-            existingCar.CategoryId = car.CategoryId;
-            existingCar.ClassId = car.ClassId;
+            existingCar.Gearbox = car.Gearbox;
             existingCar.FuelType = car.FuelType;
             existingCar.FuelUsage = car.FuelUsage;
+            existingCar.CategoryId = car.CategoryId;
+            existingCar.ClassId = car.ClassId;
 
-            _context.PricingTier.RemoveRange(existingCar.PricingTiers); 
+            // Remove existing PricingTiers
+            _context.PricingTier.RemoveRange(existingCar.PricingTiers);
 
-            foreach (var tier in car.PricingTiers)
+            // Add new PricingTiers
+            if (car.PricingTiers != null && car.PricingTiers.Any())
             {
-                tier.Id = Guid.NewGuid(); 
-                tier.CarId = car.Id;
-                _context.PricingTier.Add(tier); 
+                foreach (var tier in car.PricingTiers)
+                {
+                    existingCar.PricingTiers.Add(new PricingTier
+                    {
+                        MinDays = tier.MinDays,
+                        MaxDays = tier.MaxDays,
+                        PricePerDay = tier.PricePerDay
+                    });
+                }
             }
 
             await _context.SaveChangesAsync();
@@ -196,6 +201,7 @@ namespace CarRentalSystem.Controllers
             TempData["Success"] = "Car updated successfully!";
             return RedirectToAction("ManageCars");
         }
+
 
 
         [HttpPost]

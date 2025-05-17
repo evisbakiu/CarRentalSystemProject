@@ -76,11 +76,11 @@
                         {
                             <tr>
                                 <td>
-                                    <input type="number" name="PricingTiers[@tier.MinDays].MinDays" value="@tier.MinDays" hidden />
+                                    <input type="hidden" name="PricingTiers[@tier.MinDays].MinDays" value="@tier.MinDays" />
                                     @tier.MinDays
                                 </td>
                                 <td>
-                                    <input type="number" name="PricingTiers[@tier.MaxDays].MaxDays" value="@tier.MaxDays" hidden />
+                                    <input type="hidden" name="PricingTiers[@tier.MinDays].MaxDays" value="@tier.MaxDays" />
                                     @tier.MaxDays
                                 </td>
                                 <td>
@@ -92,9 +92,9 @@
                                            required />
                                 </td>
                             </tr>
-
                         }
                     </tbody>
+
                 </table>
             </div>
 

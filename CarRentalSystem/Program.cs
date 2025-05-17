@@ -62,6 +62,13 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    CheckConsentNeeded = context => false,
+    MinimumSameSitePolicy = SameSiteMode.Lax
+});
+
+
 app.UseRouting();
 
 app.UseAuthentication();  // Enable authentication

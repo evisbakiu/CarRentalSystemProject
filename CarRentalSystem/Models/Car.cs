@@ -25,6 +25,7 @@ namespace CarRentalSystem.Models
         public decimal FuelUsage { get; set; } 
 
         public ICollection<CarFeature>? Features { get; set; }
+        public ICollection<Reservation>? Reservations { get; set; }
     }
 
 }

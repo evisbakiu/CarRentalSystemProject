@@ -24,7 +24,6 @@ namespace CarRentalSystem.Controllers
             return View(users);
         }
 
-        [Authorize(Roles = "User")]
         public async Task<IActionResult> CarList()
         {
             var cars = await _context.Car
@@ -39,7 +38,6 @@ namespace CarRentalSystem.Controllers
 
             return View(groupedCars);
         }
-        [Authorize(Roles = "User")]
         public async Task<IActionResult> CarDetails(Guid id)
         {
             var car = await _context.Car.Include(c => c.PricingTiers).FirstOrDefaultAsync(c => c.Id == id);
