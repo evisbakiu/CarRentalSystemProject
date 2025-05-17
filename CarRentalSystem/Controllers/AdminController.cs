@@ -246,15 +246,24 @@ namespace CarRentalSystem.Controllers
         #endregion
 
         #region Manage Users
-        public async Task<IActionResult> Users()
+        public async Task<IActionResult> Users(string roleFilter, string emailSearch)
         {
-            var users = await _userManager.Users.ToListAsync();
+            var usersQuery = _userManager.Users.AsQueryable();
 
+            if (!string.IsNullOrEmpty(emailSearch))
+            {
+                usersQuery = usersQuery.Where(u => u.Email.Contains(emailSearch));
+            }
+
+            var allUsers = await usersQuery.ToListAsync();
             var model = new List<ManageUserViewModel>();
 
-            foreach (var user in users)
+            foreach (var user in allUsers)
             {
                 var roles = await _userManager.GetRolesAsync(user);
+
+                if (!string.IsNullOrEmpty(roleFilter) && !roles.Contains(roleFilter))
+                    continue;
 
                 model.Add(new ManageUserViewModel
                 {
@@ -268,8 +277,13 @@ namespace CarRentalSystem.Controllers
                 });
             }
 
+            ViewBag.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+            ViewBag.RoleFilter = roleFilter;
+            ViewBag.EmailSearch = emailSearch;
+
             return View(model);
         }
+
 
 
         public async Task<IActionResult> DeleteUser(string id)
