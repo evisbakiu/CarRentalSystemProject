@@ -41,7 +41,21 @@
         <input type="hidden" name="ReturnLocation" value="Tirana International Airport (TIA), Tirana, Albania 1001" />
 
         <div class="text-end">
-            <button type="submit" class="btn btn-orange">Confirm Reservation</button>
+            <form asp-controller="Payment" asp-action="StartStripePayment" method="post">
+                <input type="hidden" name="CarId" value="@Model.CarId" />
+                <input type="hidden" name="PickUpDateTime" value="@Model.PickUpDateTime.ToString("o")" />
+                <input type="hidden" name="ReturnDateTime" value="@Model.ReturnDateTime.ToString("o")" />
+                <input type="hidden" name="TotalCost" value="@Model.TotalCost" />
+                <button type="submit" class="btn btn-success">Pay with Stripe</button>
+            </form>
+
+            <form asp-controller="Payment" asp-action="StartPayPalPayment" method="post">
+                <input type="hidden" name="CarId" value="@Model.CarId" />
+                <input type="hidden" name="PickUpDateTime" value="@Model.PickUpDateTime.ToString("s")" />
+                <input type="hidden" name="ReturnDateTime" value="@Model.ReturnDateTime.ToString("s")" />
+                <input type="hidden" name="TotalCost" value="@Model.TotalCost" />
+                <button type="submit" class="btn btn-warning">Pay with PayPal</button>
+            </form>
             <a asp-action="CarList" asp-controller="UserCar" class="btn btn-outline-orange">Cancel</a>
         </div>
     </form>

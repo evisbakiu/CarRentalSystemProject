@@ -10,3 +10,448 @@
     <a asp-action="Users" class="btn btn-primary">Manage Users</a>
     <a asp-action="Reports" class="btn btn-primary">Generate Reports</a>
 </div>
+<!-- Date Range Filter -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Filter Reservations</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" id="endDate" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button id="filterBtn" class="btn btn-primary">Apply Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Statistics Row -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Car Availability</h5>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h2 id="availableCars">-</h2>
+                            <p class="mb-0">Cars Available</p>
+                        </div>
+                        <div>
+                            <h2 id="totalCars">-</h2>
+                            <p class="mb-0">Total Cars</p>
+                        </div>
+                    </div>
+                    <div class="progress mt-3 bg-light">
+                        <div id="availabilityProgress" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <p class="mt-2 mb-0"><span id="availabilityRate">0</span>% Availability Rate</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Average Rental Duration by Month</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="durationChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Reservations by Car Class</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="carClassChart" height="260"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Fleet Distribution by Fuel Type</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="fuelTypeChart" height="260"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Customers & Cars -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Top Customers</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" id="topCustomersTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Rentals</th>
+                                <th>Total Spent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Top Cars</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" id="topCarsTable">
+                        <thead>
+                            <tr>
+                                <th>Car</th>
+                                <th>License Plate</th>
+                                <th>Rentals</th>
+                                <th>Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Reservations -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Recent Reservations</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped" id="reservationsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Car</th>
+                            <th>License Plate</th>
+                            <th>Customer</th>
+                            <th>Email</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Duration</th>
+                            <th>Total Cost</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Helper function to format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+        }
+
+        // Helper function to format dates
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        // Set default date range to current month
+        function setDefaultDateRange() {
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+            const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+            document.getElementById('startDate').valueAsDate = firstDay;
+            document.getElementById('endDate').valueAsDate = lastDay;
+        }
+
+        // Charts
+        let durationChart, carClassChart, fuelTypeChart;
+
+        // Load all dashboard data
+        function loadDashboardData() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            // Load reservation details
+            fetch(`/DashboardApi/GetReservationDetails?startDate=${startDate}&endDate=${endDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#reservationsTable tbody');
+                    tableBody.innerHTML = '';
+
+                    data.data.forEach(reservation => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${reservation.id}</td>
+                            <td>${reservation.carName}</td>
+                            <td>${reservation.carLicensePlate}</td>
+                            <td>${reservation.userName}</td>
+                            <td>${reservation.userEmail}</td>
+                            <td>${formatDate(reservation.startDate)}</td>
+                            <td>${formatDate(reservation.endDate)}</td>
+                            <td>${reservation.durationDays} days</td>
+                            <td>${formatCurrency(reservation.totalCost)}</td>
+                            <td><span class="badge ${reservation.status === 'Completed' ? 'bg-success' : reservation.status === 'Cancelled' ? 'bg-danger' : 'bg-warning'}">${reservation.status}</span></td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                });
+
+            // Load top customers
+            fetch('/DashboardApi/GetTopCustomers')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#topCustomersTable tbody');
+                    tableBody.innerHTML = '';
+
+                    data.forEach(customer => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${customer.fullName}</td>
+                            <td>${customer.email}</td>
+                            <td>${customer.reservationCount}</td>
+                            <td>${formatCurrency(customer.totalSpent)}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                });
+
+            // Load top cars
+            fetch('/DashboardApi/GetTopCars')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#topCarsTable tbody');
+                    tableBody.innerHTML = '';
+
+                    data.forEach(car => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${car.name}</td>
+                            <td>${car.licensePlate}</td>
+                            <td>${car.reservationCount}</td>
+                            <td>${formatCurrency(car.revenue)}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                });
+
+            // Load car availability rate
+            fetch('/DashboardApi/GetCarAvailabilityRate')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('availableCars').textContent = data.availableCars;
+                    document.getElementById('totalCars').textContent = data.totalCars;
+                    document.getElementById('availabilityRate').textContent = data.availabilityRate;
+
+                    const progressBar = document.getElementById('availabilityProgress');
+                    progressBar.style.width = `${data.availabilityRate}%`;
+                });
+
+            // Load average duration by month
+            fetch('/DashboardApi/GetAverageDurationByMonth')
+                .then(response => response.json())
+                .then(data => {
+                    if (durationChart) {
+                        durationChart.destroy();
+                    }
+
+                    const labels = data.map(item => item.month);
+                    const durations = data.map(item => item.averageDays);
+
+                    const ctx = document.getElementById('durationChart').getContext('2d');
+                    durationChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Average Duration (Days)',
+                                data: durations,
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 2,
+                                tension: 0.3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Days'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+
+            // Load reservations by car class
+            fetch('/DashboardApi/GetReservationsByCarClass')
+                .then(response => response.json())
+                .then(data => {
+                    if (carClassChart) {
+                        carClassChart.destroy();
+                    }
+
+                    const labels = data.map(item => item.className);
+                    const counts = data.map(item => item.count);
+                    const revenues = data.map(item => item.revenue);
+
+                    const ctx = document.getElementById('carClassChart').getContext('2d');
+                    carClassChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'Reservations',
+                                    data: counts,
+                                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    borderWidth: 1,
+                                    yAxisID: 'y'
+                                },
+                                {
+                                    label: 'Revenue',
+                                    data: revenues,
+                                    backgroundColor: 'rgba(255, 159, 64, 0.7)',
+                                    borderColor: 'rgba(255, 159, 64, 1)',
+                                    borderWidth: 1,
+                                    type: 'line',
+                                    yAxisID: 'y1'
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    position: 'left',
+                                    title: {
+                                        display: true,
+                                        text: 'Reservations'
+                                    }
+                                },
+                                y1: {
+                                    beginAtZero: true,
+                                    position: 'right',
+                                    grid: {
+                                        drawOnChartArea: false
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Revenue'
+                                    },
+                                    ticks: {
+                                        callback: function(value) {
+                                            return '$' + value.toLocaleString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+
+            // Load fuel type distribution
+            fetch('/DashboardApi/GetFuelTypeDistribution')
+                .then(response => response.json())
+                .then(data => {
+                    if (fuelTypeChart) {
+                        fuelTypeChart.destroy();
+                    }
+
+                    const labels = data.map(item => item.fuelType);
+                    const counts = data.map(item => item.count);
+
+                    // Generate colors based on number of fuel types
+                    const backgroundColors = [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)',
+                        'rgba(199, 199, 199, 0.7)'
+                    ];
+
+                    const ctx = document.getElementById('fuelTypeChart').getContext('2d');
+                    fuelTypeChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: counts,
+                                backgroundColor: backgroundColors.slice(0, labels.length),
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const label = context.label || '';
+                                            const value = context.raw || 0;
+                                            const total = context.dataset.data.reduce((acc, val) => acc + val, 0);
+                                            const percentage = Math.round((value / total) * 100);
+                                            return `${label}: ${value} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            setDefaultDateRange();
+            loadDashboardData();
+
+            // Set up filter button
+            document.getElementById('filterBtn').addEventListener('click', loadDashboardData);
+        });
+    </script>
+    }

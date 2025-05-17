@@ -27,6 +27,157 @@ namespace CarRentalSystem.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public async Task<IActionResult> GetReservationDetails(DateTime? startDate, DateTime? endDate)
+        {
+            // Default to current month if no dates provided
+            if (!startDate.HasValue)
+                startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+            if (!endDate.HasValue)
+                endDate = startDate.Value.AddMonths(1).AddDays(-1);
+
+            var reservations = await _context.Reservation
+                .Include(r => r.Car)
+                .Include(r => r.User)
+                .Include(r => r.Status)
+                .Where(r => r.StartDate >= startDate && r.EndDate <= endDate)
+                .Select(r => new
+                {
+                    id = r.Id,
+                    carName = r.Car.Name,
+                    carLicensePlate = r.Car.LicensePlate,
+                    userName = r.User.FullName,
+                    userEmail = r.User.Email,
+                    startDate = r.StartDate,
+                    endDate = r.EndDate,
+                    totalCost = r.TotalCost,
+                    status = r.Status.Name,
+                    durationDays = (r.EndDate - r.StartDate).Days
+                })
+                .ToListAsync();
+
+            return Json(new { data = reservations });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTopCustomers(int count = 5)
+        {
+            var topCustomers = await _context.Reservation
+                .Where(r => r.Status.Name == "Completed")
+                .GroupBy(r => new { r.UserId, r.User.FullName, r.User.Email })
+                .Select(g => new
+                {
+                    userId = g.Key.UserId,
+                    fullName = g.Key.FullName,
+                    email = g.Key.Email,
+                    totalSpent = g.Sum(r => r.TotalCost),
+                    reservationCount = g.Count()
+                })
+                .OrderByDescending(c => c.totalSpent)
+                .Take(count)
+                .ToListAsync();
+
+            return Json(topCustomers);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTopCars(int count = 5)
+        {
+            var topCars = await _context.Reservation
+                .Where(r => r.Status.Name == "Completed")
+                .GroupBy(r => new { r.CarId, r.Car.Name, r.Car.LicensePlate })
+                .Select(g => new
+                {
+                    carId = g.Key.CarId,
+                    name = g.Key.Name,
+                    licensePlate = g.Key.LicensePlate,
+                    revenue = g.Sum(r => r.TotalCost),
+                    reservationCount = g.Count()
+                })
+                .OrderByDescending(c => c.reservationCount)
+                .Take(count)
+                .ToListAsync();
+
+            return Json(topCars);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetReservationsByCarClass()
+        {
+            var reservationsByClass = await _context.Reservation
+                .Where(r => r.Status.Name == "Completed")
+                .GroupBy(r => r.Car.Class.Name)
+                .Select(g => new
+                {
+                    className = g.Key,
+                    count = g.Count(),
+                    revenue = g.Sum(r => r.TotalCost)
+                })
+                .OrderByDescending(x => x.count)
+                .ToListAsync();
+
+            return Json(reservationsByClass);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetFuelTypeDistribution()
+        {
+            var fuelTypes = await _context.Car
+                .GroupBy(c => c.FuelType)
+                .Select(g => new
+                {
+                    fuelType = g.Key,
+                    count = g.Count()
+                })
+                .OrderByDescending(x => x.count)
+                .ToListAsync();
+
+            return Json(fuelTypes);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAverageDurationByMonth()
+        {
+            var currentYear = DateTime.Now.Year;
+            var monthlyAverages = new List<object>();
+
+            for (int month = 1; month <= 12; month++)
+            {
+                var monthStart = new DateTime(currentYear, month, 1);
+                var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+
+                var avgDuration = await _context.Reservation
+                    .Where(r => r.StartDate >= monthStart && r.StartDate <= monthEnd)
+                    .Select(r => (double)(r.EndDate - r.StartDate).Days)
+                    .DefaultIfEmpty(0)
+                    .AverageAsync();
+
+                monthlyAverages.Add(new
+                {
+                    month = monthStart.ToString("MMMM"),
+                    averageDays = Math.Round(avgDuration, 1)
+                });
+            }
+
+            return Json(monthlyAverages);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCarAvailabilityRate()
+        {
+            int totalCars = await _context.Car.CountAsync();
+            int availableCars = await _context.Car.CountAsync(c => c.IsAvailable);
+
+            var availabilityRate = totalCars > 0 ? (double)availableCars / totalCars * 100 : 0;
+
+            return Json(new
+            {
+                totalCars,
+                availableCars,
+                availabilityRate = Math.Round(availabilityRate, 2)
+            });
+        }
 
         #region Manage Cars
 
@@ -335,5 +486,7 @@ namespace CarRentalSystem.Controllers
         }
 
         #endregion
+
+
     }
 }

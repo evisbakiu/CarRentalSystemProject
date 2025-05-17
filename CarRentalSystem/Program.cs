@@ -6,6 +6,7 @@ using CarRentalSystem.Services.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +71,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 
 app.UseRouting();
+
 
 app.UseAuthentication();  // Enable authentication
 app.UseAuthorization();   // Enable authorization
