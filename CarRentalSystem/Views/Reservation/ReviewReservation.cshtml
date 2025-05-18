@@ -33,32 +33,19 @@
         </table>
     </div>
 
-    <form asp-action="ConfirmReservation" method="post">
-        <input type="hidden" name="CarId" value="@Model.CarId" />
-        <input type="hidden" name="PickUpDateTime" value="@Model.PickUpDateTime.ToString("s")" />
-        <input type="hidden" name="ReturnDateTime" value="@Model.ReturnDateTime.ToString("s")" />
-        <input type="hidden" name="PickUpLocation" value="Tirana International Airport (TIA), Tirana, Albania 1001" />
-        <input type="hidden" name="ReturnLocation" value="Tirana International Airport (TIA), Tirana, Albania 1001" />
+    <div class="text-center mt-4">
+        <form asp-controller="Payment" asp-action="StartPayPalPayment" method="post" class="d-inline-block mx-2">
+            <input type="hidden" name="carId" value="@Model.CarId" />
+            <input type="hidden" name="pickUpDateTime" value="@Model.PickUpDateTime.ToString("s")" />
+            <input type="hidden" name="returnDateTime" value="@Model.ReturnDateTime.ToString("s")" />
+            <input type="hidden" name="totalCost" value="@Model.TotalCost" />
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-paypal me-2"></i> Paguaj me PayPal
+            </button>
+        </form>
 
-        <div class="text-end">
-            <form asp-controller="Payment" asp-action="StartStripePayment" method="post">
-                <input type="hidden" name="CarId" value="@Model.CarId" />
-                <input type="hidden" name="PickUpDateTime" value="@Model.PickUpDateTime.ToString("o")" />
-                <input type="hidden" name="ReturnDateTime" value="@Model.ReturnDateTime.ToString("o")" />
-                <input type="hidden" name="TotalCost" value="@Model.TotalCost" />
-                <button type="submit" class="btn btn-success">Pay with Stripe</button>
-            </form>
-
-            <form asp-controller="Payment" asp-action="StartPayPalPayment" method="post">
-                <input type="hidden" name="CarId" value="@Model.CarId" />
-                <input type="hidden" name="PickUpDateTime" value="@Model.PickUpDateTime.ToString("s")" />
-                <input type="hidden" name="ReturnDateTime" value="@Model.ReturnDateTime.ToString("s")" />
-                <input type="hidden" name="TotalCost" value="@Model.TotalCost" />
-                <button type="submit" class="btn btn-warning">Pay with PayPal</button>
-            </form>
-            <a asp-action="CarList" asp-controller="UserCar" class="btn btn-outline-orange">Cancel</a>
-        </div>
-    </form>
+        <a asp-action="CarList" asp-controller="UserCar" class="btn btn-outline-secondary btn-lg mx-2">Anulo</a>
+    </div>
 </div>
 
 <style>

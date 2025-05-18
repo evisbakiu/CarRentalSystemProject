@@ -60,65 +60,6 @@ namespace CarRentalSystem.Controllers
             return Json(new { data = reservations });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetTopCustomers(int count = 5)
-        {
-            var topCustomers = await _context.Reservation
-                .Where(r => r.Status.Name == "Completed")
-                .GroupBy(r => new { r.UserId, r.User.FullName, r.User.Email })
-                .Select(g => new
-                {
-                    userId = g.Key.UserId,
-                    fullName = g.Key.FullName,
-                    email = g.Key.Email,
-                    totalSpent = g.Sum(r => r.TotalCost),
-                    reservationCount = g.Count()
-                })
-                .OrderByDescending(c => c.totalSpent)
-                .Take(count)
-                .ToListAsync();
-
-            return Json(topCustomers);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetTopCars(int count = 5)
-        {
-            var topCars = await _context.Reservation
-                .Where(r => r.Status.Name == "Completed")
-                .GroupBy(r => new { r.CarId, r.Car.Name, r.Car.LicensePlate })
-                .Select(g => new
-                {
-                    carId = g.Key.CarId,
-                    name = g.Key.Name,
-                    licensePlate = g.Key.LicensePlate,
-                    revenue = g.Sum(r => r.TotalCost),
-                    reservationCount = g.Count()
-                })
-                .OrderByDescending(c => c.reservationCount)
-                .Take(count)
-                .ToListAsync();
-
-            return Json(topCars);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetReservationsByCarClass()
-        {
-            var reservationsByClass = await _context.Reservation
-                .Where(r => r.Status.Name == "Completed")
-                .GroupBy(r => r.Car.Class.Name)
-                .Select(g => new
-                {
-                    className = g.Key,
-                    count = g.Count(),
-                    revenue = g.Sum(r => r.TotalCost)
-                })
-                .OrderByDescending(x => x.count)
-                .ToListAsync();
-
-            return Json(reservationsByClass);
-        }
 
         [HttpGet]
         public async Task<IActionResult> GetFuelTypeDistribution()
@@ -137,30 +78,42 @@ namespace CarRentalSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAverageDurationByMonth()
+        public async Task<IActionResult> GetReservationsByMonth()
         {
-            var currentYear = DateTime.Now.Year;
-            var monthlyAverages = new List<object>();
-
-            for (int month = 1; month <= 12; month++)
+            try
             {
-                var monthStart = new DateTime(currentYear, month, 1);
-                var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+                var currentYear = DateTime.Now.Year;
+                var monthlyData = new List<object>();
 
-                var avgDuration = await _context.Reservation
-                    .Where(r => r.StartDate >= monthStart && r.StartDate <= monthEnd)
-                    .Select(r => (double)(r.EndDate - r.StartDate).Days)
-                    .DefaultIfEmpty(0)
-                    .AverageAsync();
-
-                monthlyAverages.Add(new
+                for (int month = 1; month <= 12; month++)
                 {
-                    month = monthStart.ToString("MMMM"),
-                    averageDays = Math.Round(avgDuration, 1)
-                });
-            }
+                    DateTime monthStart, monthEnd;
+                    try
+                    {
+                        monthStart = new DateTime(currentYear, month, 1);
+                        monthEnd = monthStart.AddMonths(1).AddDays(-1);
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        continue;
+                    }
 
-            return Json(monthlyAverages);
+                    var reservationCount = await _context.Reservation
+                        .CountAsync(r => r.StartDate >= monthStart && r.StartDate <= monthEnd);
+
+                    monthlyData.Add(new
+                    {
+                        month = monthStart.ToString("MMMM"),
+                        reservationCount
+                    });
+                }
+
+                return Json(monthlyData);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while processing your request" });
+            }
         }
 
         [HttpGet]
