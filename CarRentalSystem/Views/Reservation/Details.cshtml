@@ -29,6 +29,11 @@
                 <strong>Pick-Up Location:</strong> Tirana International Airport (TIA), Tirana, Albania 1001 <br />
                 <strong>Return Location:</strong> Tirana International Airport (TIA), Tirana, Albania 1001
             </p>
+            @if (ViewBag.PickUpDate != null && ViewBag.DropOffDate != null)
+            {
+                <p>Data marrjes: @((DateTime)ViewBag.PickUpDate)</p>
+                <p>Data kthimit: @((DateTime)ViewBag.DropOffDate)</p>
+            }
             <a asp-action="MyBookings" asp-controller="User" class="btn btn-outline-orange">Back to My Bookings</a>
         </div>
     </div>

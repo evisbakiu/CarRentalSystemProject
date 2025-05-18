@@ -2,14 +2,30 @@
     ViewData["Title"] = "Home";
 }
 
-@if (ViewBag.ConsentGiven == true && User.Identity.IsAuthenticated)
+@if (ViewBag.FullName != null)
 {
-    <div class="alert alert-success text-center">
-        Welcome back, @User.Identity.Name!
-    </div>
+        <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="welcomeModalLabel">Welcome</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                           <strong>@ViewBag.FullName</strong>! Discover rental cars that match your preferences.
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            window.onload = function () {
+                var myModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+                myModal.show();
+            };
+        </script>
 }
-
-
 <!-- Full Width Search Form -->
 <div class="container-fluid py-5" style="background-color: #F8F9FA;">
     <div class="text-center mb-5">

@@ -1,4 +1,5 @@
-﻿using CarRentalSystem.Data;
+﻿using System.Security.Claims;
+using CarRentalSystem.Data;
 using CarRentalSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ public class HomeController : Controller
         _context = context;
     }
 
+
     public IActionResult Index()
     {
         var cars = _context.Car.ToList();
@@ -19,7 +21,14 @@ public class HomeController : Controller
         var consentCookie = Request.Cookies["userConsent"];
         bool isConsentGiven = consentCookie == "true";
 
-        ViewBag.ConsentGiven = isConsentGiven;
+        //ViewBag.ConsentGiven = isConsentGiven; TODO Check
+
+        var fullName = HttpContext.Session.GetString("FullName");
+        if (fullName != null)
+        {
+            ViewBag.FullName = fullName;
+            HttpContext.Session.Remove("FullName"); // fshihet pasi të shfaqet
+        }
 
         return View(cars);
     }    
