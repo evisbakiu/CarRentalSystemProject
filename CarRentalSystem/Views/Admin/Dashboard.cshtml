@@ -3,49 +3,77 @@
     ViewBag.Title = "Admin Dashboard";
 }
 
-<h2>Admin Dashboard</h2>
+<h2 class="mb-3 text-center">Admin Dashboard</h2>
 
-<div class="row mb-4">
-    <div class="col-md-4">
-        <partial name="_CarAvailabilityCard" />
+<div class="container">
+    <div class="row g-3 mb-4 justify-content-center">
+        <div class="col-lg-5 col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <partial name="_CarAvailabilityCard" />
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <partial name="_FuelTypeChart" />
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-8">
-        <partial name="_ReservationsByMonthChart" />
-    </div>
-</div>
 
-<div class="row mb-4">
-    <div class="col-md-6">
-        <partial name="_FuelTypeChart" />
+    <div class="row g-3 mb-4 justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <partial name="_ReservationsByMonthChart" />
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-6">
-        <partial name="_DateRangeFilter" />
-    </div>
-</div>
 
-<div class="card mb-4">
-    <div class="card-header">
-        <h5>Recent Reservations</h5>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-striped" id="reservationsTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Car</th>
-                        <th>License Plate</th>
-                        <th>Customer</th>
-                        <th>Email</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Duration</th>
-                        <th>Total Cost</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+    <div class="row g-3 justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm mb-5">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center flex-wrap">
+                    <h5 class="mb-2 mb-sm-0">Recent Reservations</h5>
+                    <div class="d-flex flex-wrap align-items-end gap-2">
+                        <div>
+                            <label for="startDate" class="form-label mb-1 small">Start</label>
+                            <input type="date" id="startDate" class="form-control form-control-sm" />
+                        </div>
+                        <div>
+                            <label for="endDate" class="form-label mb-1 small">End</label>
+                            <input type="date" id="endDate" class="form-control form-control-sm" />
+                        </div>
+                        <div class="align-self-end">
+                            <button id="filterBtn" class="btn btn-sm btn-primary">Apply</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" style="overflow-x: auto;">
+                        <table class="table table-sm table-bordered table-hover w-100" id="reservationsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Car</th>
+                                    <th>License Plate</th>
+                                    <th>Customer</th>
+                                    <th>Email</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Duration</th>
+                                    <th>Total Cost</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -54,3 +82,34 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="~/js/adminDashboard.js"></script>
 }
+
+<style>
+    body {
+        padding-bottom: 100px;
+        background-color: #f8f9fa;
+    }
+
+    .card-body canvas {
+        width: 100% !important;
+        height: 260px !important;
+        display: block;
+    }
+
+    .card {
+        border: none;
+        border-radius: 12px;
+    }
+
+    .card-header {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .card h5 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+</style>
