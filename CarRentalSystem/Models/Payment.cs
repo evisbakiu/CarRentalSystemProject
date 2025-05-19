@@ -2,7 +2,7 @@
 {
     public class Payment : BaseEntity
     {
-        public int ReservationId { get; set; }
+        public Guid ReservationId { get; set; }
         public Reservation? Reservation { get; set; }
 
         public DateTime PaymentDate { get; set; }

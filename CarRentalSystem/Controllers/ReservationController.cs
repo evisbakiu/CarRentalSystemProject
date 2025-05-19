@@ -146,13 +146,12 @@ namespace CarRentalSystem.Controllers
             return View(reservationDetails);
         }
 
-
-
         [HttpPost]
         public async Task<IActionResult> ConfirmReservation(Guid carId, DateTime pickUpDateTime, DateTime returnDateTime)
         {
             var car = await _context.Car
-                .Include(c => c.Reservations) 
+                .Include(c => c.Reservations)
+                .Include(c => c.PricingTiers)
                 .FirstOrDefaultAsync(c => c.Id == carId);
 
             if (car == null)
@@ -162,7 +161,7 @@ namespace CarRentalSystem.Controllers
             }
 
             bool isReserved = car.Reservations.Any(r =>
-                (pickUpDateTime < r.EndDate && returnDateTime > r.StartDate)); 
+                (pickUpDateTime < r.EndDate && returnDateTime > r.StartDate));
 
             if (isReserved)
             {
@@ -177,28 +176,33 @@ namespace CarRentalSystem.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var reservation = new Reservation
+            // Calculate rental days and find applicable pricing tier
+            var rentalDays = (returnDateTime - pickUpDateTime).Days;
+            var applicableTier = car.PricingTiers.FirstOrDefault(t => rentalDays >= t.MinDays && rentalDays <= t.MaxDays);
+
+            if (applicableTier == null)
             {
-                CarId = carId,
-                UserId = user.Id,
-                StartDate = pickUpDateTime,
-                EndDate = returnDateTime,
-                TotalCost = (returnDateTime - pickUpDateTime).Days * car.PricePerDay,
-                StatusId = _context.Status.FirstOrDefault(s => s.Name == "Pending")!.Id
-            };
+                // Fall back to default pricing if no tier is found
+                TempData["Error"] = "No pricing tier is available for the selected rental period.";
+                return RedirectToAction("ReviewReservation", new { carId, pickUpDateTime, returnDateTime });
+            }
 
-            _context.Reservation.Add(reservation);
-            await _context.SaveChangesAsync();
+            var totalCost = rentalDays * applicableTier.PricePerDay;
 
-            TempData["Success"] = "Your reservation has been successfully confirmed!";
-            return RedirectToAction("MyBookings", "User");
+            // Redirect to payment page instead of creating the reservation
+            return RedirectToAction("ChoosePaymentMethod", "Payment", new
+            {
+                carId = carId,
+                pickup = pickUpDateTime,
+                returndate = returnDateTime,
+                totalCost = totalCost
+            });
         }
-
 
         public async Task<IActionResult> Details(Guid id)
         {
             var reservation = await _context.Reservation
-                .Include(r => r.Car).ThenInclude(x=>x.Class)
+                .Include(r => r.Car).ThenInclude(x => x.Class)
                 .Include(r => r.Status)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
@@ -209,6 +213,5 @@ namespace CarRentalSystem.Controllers
 
             return View(reservation);
         }
-
     }
 }
