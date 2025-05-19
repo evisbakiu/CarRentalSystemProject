@@ -1,0 +1,59 @@
+﻿@model CarRentalSystem.ViewModel.EditUserViewModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="card shadow p-4" style="min-width: 400px; width: 100%; max-width: 550px;">
+        <h3 class="text-center mb-4">Edit User: @Model.Email</h3>
+
+        <form asp-action="EditUser" method="post">
+            <input type="hidden" asp-for="UserId" />
+
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input asp-for="FullName" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Phone Number</label>
+                <input asp-for="PhoneNumber" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Date of Birth</label>
+                <input asp-for="DateOfBirth" type="date" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Roles</label>
+                <div class="form-group border rounded p-3 bg-light">
+                    @for (int i = 0; i < Model.Roles.Count; i++)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" asp-for="Roles[@i].IsSelected" />
+                            <input type="hidden" asp-for="Roles[@i].RoleName" />
+                            <label class="form-check-label">@Model.Roles[i].RoleName</label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-orange btn-lg">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .btn-orange {
+        background-color: #FFA500;
+        color: white;
+        border: none;
+    }
+
+        .btn-orange:hover {
+            background-color: #FF8C00;
+        }
+</style>

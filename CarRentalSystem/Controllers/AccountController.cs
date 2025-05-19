@@ -3,6 +3,7 @@ using CarRentalSystem.Services.Interfaces;
 using CarRentalSystem.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
@@ -131,6 +132,16 @@ public class AccountController : Controller
 
                 if (result.Succeeded)
                 {
+                    // Ruaj emrin në session për përdorim në View ose Controller
+                    HttpContext.Session.SetString("FullName", user.FullName);
+
+                    // Shtojmë claim FullName nëse nuk ekziston (opsionale, por e rekomanduar)
+                    var claims = await _userManager.GetClaimsAsync(user);
+                    if (!claims.Any(c => c.Type == ClaimTypes.Name))
+                    {
+                        await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Name, user.FullName));
+                    }
+
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -138,7 +149,7 @@ public class AccountController : Controller
             }
             else
             {
-                ModelState.AddModelError("", "User not found.");
+                ModelState.AddModelError("", "Invalid login attempt.");
             }
         }
 
@@ -147,9 +158,119 @@ public class AccountController : Controller
 
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
+
+
+    [HttpPost]
+    public IActionResult ExternalLogin(string provider, string returnUrl = null)
+    {
+        var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { returnUrl });
+        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        return Challenge(properties, provider);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+    {
+        returnUrl ??= Url.Content("~/");
+
+        if (remoteError != null)
+        {
+            ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+            return RedirectToAction("Login");
+        }
+
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info == null)
+        {
+            Console.WriteLine("info is null");
+            return RedirectToAction("Login");
+        }
+
+        var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+        if (result.Succeeded)
+        {
+            Console.WriteLine("Logged in successfully");
+
+            var existingUser = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            if (existingUser != null)
+            {
+                // Ruaj FullName në session
+                HttpContext.Session.SetString("FullName", existingUser.FullName ?? "");
+
+                // Shto Claim nëse nuk ekziston
+                var claims = await _userManager.GetClaimsAsync(existingUser);
+                if (!claims.Any(c => c.Type == ClaimTypes.Name))
+                {
+                    await _userManager.AddClaimAsync(existingUser, new Claim(ClaimTypes.Name, existingUser.FullName ?? ""));
+                }
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        // MERR TË DHËNAT NGA GOOGLE
+        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+        var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+        Console.WriteLine("Email nga Google: " + email);
+
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            user = new User
+            {
+                UserName = email,
+                Email = email,
+                FullName = name,
+                EmailConfirmed = true
+            };
+
+            var createResult = await _userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+            {
+                Console.WriteLine("Krijimi deshtoi:");
+                foreach (var error in createResult.Errors)
+                    Console.WriteLine(error.Description);
+
+                return RedirectToAction("Login");
+            }
+
+            Console.WriteLine("User u krijua me sukses");
+        }
+
+        // LIDH GOOGLE
+        var loginResult = await _userManager.AddLoginAsync(user, info);
+        if (!loginResult.Succeeded)
+        {
+            Console.WriteLine("AddLoginAsync deshtoi");
+            foreach (var error in loginResult.Errors)
+                Console.WriteLine(error.Description);
+
+            return RedirectToAction("Login");
+        }
+
+        await _signInManager.SignInAsync(user, isPersistent: false);
+        Console.WriteLine("User u logua me sukses");
+
+        // Ruaj FullName në session
+        HttpContext.Session.SetString("FullName", user.FullName ?? "");
+
+        // Shto Claim për emrin nëse nuk ekziston
+        var userClaims = await _userManager.GetClaimsAsync(user);
+        if (!userClaims.Any(c => c.Type == ClaimTypes.Name))
+        {
+            await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Name, user.FullName ?? ""));
+        }
+
+        return RedirectToAction("Index", "Home");
+    }
+
+
+
+
 }
