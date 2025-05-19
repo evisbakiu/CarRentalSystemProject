@@ -1,0 +1,56 @@
+﻿@* Dashboard.cshtml *@
+@{
+    ViewBag.Title = "Admin Dashboard";
+}
+
+<h2>Admin Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <partial name="_CarAvailabilityCard" />
+    </div>
+    <div class="col-md-8">
+        <partial name="_ReservationsByMonthChart" />
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <partial name="_FuelTypeChart" />
+    </div>
+    <div class="col-md-6">
+        <partial name="_DateRangeFilter" />
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Recent Reservations</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped" id="reservationsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Car</th>
+                        <th>License Plate</th>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Duration</th>
+                        <th>Total Cost</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/adminDashboard.js"></script>
+}

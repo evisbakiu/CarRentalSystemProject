@@ -24,10 +24,11 @@ namespace CarRentalSystem.Controllers
             _roleManager = roleManager;
         }
 
-        public IActionResult Index()
+        public IActionResult Dashboard()
         {
             return View();
         }
+
         [HttpGet]
         public async Task<IActionResult> GetReservationDetails(DateTime? startDate, DateTime? endDate)
         {
@@ -60,7 +61,6 @@ namespace CarRentalSystem.Controllers
 
             return Json(new { data = reservations });
         }
-
 
         [HttpGet]
         public async Task<IActionResult> GetFuelTypeDistribution()

@@ -5,13 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using PayPalCheckoutSdk.Core;
 using PayPalCheckoutSdk.Orders;
 using Stripe.Checkout;
+using System.Globalization;
+
 
 public class PaymentController : Controller
 {
     private readonly ApplicationDbContext _context;
     private readonly IConfiguration _config;
     private readonly UserManager<User> _userManager;
-
     private readonly PayPalHttpClient _payPalClient;
 
     public PaymentController(ApplicationDbContext context, IConfiguration config, UserManager<User> userManager)
@@ -23,9 +24,14 @@ public class PaymentController : Controller
         var clientId = _config["PayPal:ClientId"];
         var clientSecret = _config["PayPal:ClientSecret"];
         var env = _config["PayPal:Environment"] ?? "sandbox";
+
+        if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
+        {
+            throw new Exception("PayPal credentials are not configured properly.");
+        }
+
         _payPalClient = PayPalClient.Client(clientId, clientSecret, env);
 
-        // Setup Stripe API Key (lexo nga appsettings ose enkriptuar)
         Stripe.StripeConfiguration.ApiKey = _config["Stripe:SecretKey"];
     }
 
@@ -43,7 +49,7 @@ public class PaymentController : Controller
                 {
                     PriceData = new SessionLineItemPriceDataOptions
                     {
-                        UnitAmountDecimal = totalCost * 100, // në cent
+                        UnitAmountDecimal = totalCost * 100,
                         Currency = "eur",
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
@@ -69,7 +75,7 @@ public class PaymentController : Controller
     {
         var domain = $"{Request.Scheme}://{Request.Host}";
 
-        var orderRequest = new OrderRequest()
+        var orderRequest = new OrderRequest
         {
             CheckoutPaymentIntent = "CAPTURE",
             PurchaseUnits = new List<PurchaseUnitRequest>
@@ -81,7 +87,7 @@ public class PaymentController : Controller
                     AmountWithBreakdown = new AmountWithBreakdown
                     {
                         CurrencyCode = "EUR",
-                        Value = totalCost.ToString("F2")
+                        Value = totalCost.ToString("F2", CultureInfo.InvariantCulture)
                     }
                 }
             },
@@ -102,15 +108,14 @@ public class PaymentController : Controller
             var result = response.Result<Order>();
 
             var approvalLink = result.Links.FirstOrDefault(x => x.Rel == "approve")?.Href;
-            if (approvalLink != null)
+
+            if (!string.IsNullOrEmpty(approvalLink))
             {
                 return Redirect(approvalLink);
             }
-            else
-            {
-                TempData["Error"] = "Could not get PayPal approval link.";
-                return RedirectToAction("PaymentFailed", new { carId, pickup = pickUpDateTime, returndate = returnDateTime });
-            }
+
+            TempData["Error"] = "Could not get PayPal approval link.";
+            return RedirectToAction("PaymentFailed", new { carId, pickup = pickUpDateTime, returndate = returnDateTime });
         }
         catch (Exception ex)
         {
@@ -119,11 +124,11 @@ public class PaymentController : Controller
         }
     }
 
-    public async Task<IActionResult> PayPalSuccess(Guid carId, DateTime pickup, DateTime returndate, string token, string PayerID)
+    public async Task<IActionResult> PayPalSuccess(Guid carId, DateTime pickup, DateTime returndate, string token)
     {
-        if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(PayerID))
+        if (string.IsNullOrEmpty(token))
         {
-            TempData["Error"] = "Invalid PayPal payment response.";
+            TempData["Error"] = "Invalid PayPal payment token.";
             return RedirectToAction("PaymentFailed", new { carId, pickup, returndate });
         }
 
@@ -137,13 +142,12 @@ public class PaymentController : Controller
 
             if (result.Status == "COMPLETED")
             {
-                // Krijojmë rezervimin dhe ruajmë pagesën
                 var car = await _context.Car.FindAsync(carId);
                 var user = await _userManager.GetUserAsync(User);
 
                 if (car == null || !car.IsAvailable || user == null)
                 {
-                    TempData["Error"] = "Unable to complete reservation. Please try again.";
+                    TempData["Error"] = "Unable to complete reservation.";
                     return RedirectToAction("ReviewReservation", "Reservation", new { carId, pickUpDateTime = pickup, returnDateTime = returndate });
                 }
 
@@ -154,12 +158,12 @@ public class PaymentController : Controller
                     StartDate = pickup,
                     EndDate = returndate,
                     TotalCost = (returndate - pickup).Days * car.PricePerDay,
-                    StatusId = _context.Status.FirstOrDefault(s => s.Name == "Confirmed")!.Id
+                    StatusId = _context.Status.First(s => s.Name == "Confirmed").Id
                 };
 
                 car.IsAvailable = false;
                 _context.Reservation.Add(reservation);
-                await _context.SaveChangesAsync(); // Save to get the reservation ID
+                await _context.SaveChangesAsync();
 
                 var payment = new Payment
                 {
@@ -173,17 +177,21 @@ public class PaymentController : Controller
                 TempData["Success"] = "Reservation completed via PayPal!";
                 return RedirectToAction("MyBookings", "User");
             }
-            else
-            {
-                TempData["Error"] = "PayPal payment was not completed.";
-                return RedirectToAction("PaymentFailed", new { carId, pickup, returndate });
-            }
+
+            TempData["Error"] = $"PayPal returned unexpected status: {result.Status}";
+            return RedirectToAction("PaymentFailed", new { carId, pickup, returndate });
         }
         catch (Exception ex)
         {
             TempData["Error"] = $"PayPal capture error: {ex.Message}";
             return RedirectToAction("PaymentFailed", new { carId, pickup, returndate });
         }
+    }
+
+    public IActionResult PaymentFailed(Guid carId, DateTime pickup, DateTime returndate)
+    {
+        TempData["Error"] = "Payment was cancelled or failed. Please try again.";
+        return RedirectToAction("ReviewReservation", "Reservation", new { carId, pickUpDateTime = pickup, returnDateTime = returndate });
     }
 
     public async Task<IActionResult> PaymentSuccess(Guid carId, DateTime pickup, DateTime returndate, string method)
@@ -193,7 +201,7 @@ public class PaymentController : Controller
 
         if (car == null || !car.IsAvailable || user == null)
         {
-            TempData["Error"] = "Unable to complete reservation. Please try again.";
+            TempData["Error"] = "Unable to complete reservation.";
             return RedirectToAction("ReviewReservation", "Reservation", new { carId, pickUpDateTime = pickup, returnDateTime = returndate });
         }
 
@@ -204,12 +212,12 @@ public class PaymentController : Controller
             StartDate = pickup,
             EndDate = returndate,
             TotalCost = (returndate - pickup).Days * car.PricePerDay,
-            StatusId = _context.Status.FirstOrDefault(s => s.Name == "Confirmed")!.Id
+            StatusId = _context.Status.First(s => s.Name == "Confirmed").Id
         };
 
         car.IsAvailable = false;
         _context.Reservation.Add(reservation);
-        await _context.SaveChangesAsync(); // Save to get the reservation ID
+        await _context.SaveChangesAsync();
 
         var payment = new Payment
         {
@@ -220,15 +228,8 @@ public class PaymentController : Controller
         _context.Payment.Add(payment);
         await _context.SaveChangesAsync();
 
-
         TempData["Success"] = $"Reservation completed via {method}!";
         return RedirectToAction("MyBookings", "User");
     }
-
-
-    public IActionResult PaymentFailed(Guid carId, DateTime pickup, DateTime returndate)
-    {
-        TempData["Error"] = "Payment was cancelled or failed. Please try again.";
-        return RedirectToAction("ReviewReservation", "Reservation", new { carId, pickUpDateTime = pickup, returnDateTime = returndate });
-    }
 }
+

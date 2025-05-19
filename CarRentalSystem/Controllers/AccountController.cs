@@ -141,6 +141,12 @@ public class AccountController : Controller
                         await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Name, user.FullName));
                     }
 
+                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        return RedirectToAction("Dashboard", "Admin");
+                    }
+
+
                     return RedirectToAction("Index", "Home");
                 }
 
