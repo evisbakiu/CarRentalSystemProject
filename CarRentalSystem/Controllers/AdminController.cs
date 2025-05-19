@@ -29,6 +29,110 @@ namespace CarRentalSystem.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public async Task<IActionResult> GetReservationDetails(DateTime? startDate, DateTime? endDate)
+        {
+            // Default to current month if no dates provided
+            if (!startDate.HasValue)
+                startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+            if (!endDate.HasValue)
+                endDate = startDate.Value.AddMonths(1).AddDays(-1);
+
+            var reservations = await _context.Reservation
+                .Include(r => r.Car)
+                .Include(r => r.User)
+                .Include(r => r.Status)
+                .Where(r => r.StartDate >= startDate && r.EndDate <= endDate)
+                .Select(r => new
+                {
+                    id = r.Id,
+                    carName = r.Car.Name,
+                    carLicensePlate = r.Car.LicensePlate,
+                    userName = r.User.FullName,
+                    userEmail = r.User.Email,
+                    startDate = r.StartDate,
+                    endDate = r.EndDate,
+                    totalCost = r.TotalCost,
+                    status = r.Status.Name,
+                    durationDays = (r.EndDate - r.StartDate).Days
+                })
+                .ToListAsync();
+
+            return Json(new { data = reservations });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetFuelTypeDistribution()
+        {
+            var fuelTypes = await _context.Car
+                .GroupBy(c => c.FuelType)
+                .Select(g => new
+                {
+                    fuelType = g.Key,
+                    count = g.Count()
+                })
+                .OrderByDescending(x => x.count)
+                .ToListAsync();
+
+            return Json(fuelTypes);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetReservationsByMonth()
+        {
+            try
+            {
+                var currentYear = DateTime.Now.Year;
+                var monthlyData = new List<object>();
+
+                for (int month = 1; month <= 12; month++)
+                {
+                    DateTime monthStart, monthEnd;
+                    try
+                    {
+                        monthStart = new DateTime(currentYear, month, 1);
+                        monthEnd = monthStart.AddMonths(1).AddDays(-1);
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        continue;
+                    }
+
+                    var reservationCount = await _context.Reservation
+                        .CountAsync(r => r.StartDate >= monthStart && r.StartDate <= monthEnd);
+
+                    monthlyData.Add(new
+                    {
+                        month = monthStart.ToString("MMMM"),
+                        reservationCount
+                    });
+                }
+
+                return Json(monthlyData);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "An error occurred while processing your request" });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCarAvailabilityRate()
+        {
+            int totalCars = await _context.Car.CountAsync();
+            int availableCars = await _context.Car.CountAsync(c => c.IsAvailable);
+
+            var availabilityRate = totalCars > 0 ? (double)availableCars / totalCars * 100 : 0;
+
+            return Json(new
+            {
+                totalCars,
+                availableCars,
+                availabilityRate = Math.Round(availabilityRate, 2)
+            });
+        }
 
         #region Manage Cars
 
@@ -411,5 +515,7 @@ namespace CarRentalSystem.Controllers
         }
 
         #endregion
+
+
     }
 }
