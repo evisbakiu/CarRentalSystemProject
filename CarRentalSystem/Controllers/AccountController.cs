@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 
 public class AccountController : Controller
 {
@@ -32,8 +31,8 @@ public class AccountController : Controller
                 UserName = model.Email,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
-                FullName = model.FullName, 
-                DateOfBirth = model.DateOfBirth 
+                FullName = model.FullName,
+                DateOfBirth = model.DateOfBirth
             };
 
             // Attempt to create the user
@@ -157,17 +156,20 @@ public class AccountController : Controller
     }
 
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
+
+        HttpContext.Session.Clear();
+
+        Response.Cookies.Delete("WelcomeName");
+
         return RedirectToAction("Index", "Home");
     }
 
 
     [HttpPost]
-    public IActionResult ExternalLogin(string provider, string returnUrl = null)
+    public IActionResult ExternalLogin(string provider, string? returnUrl = null)
     {
         var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { returnUrl });
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -175,7 +177,7 @@ public class AccountController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+    public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
     {
         returnUrl ??= Url.Content("~/");
 

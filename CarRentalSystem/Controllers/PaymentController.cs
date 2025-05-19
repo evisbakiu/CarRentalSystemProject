@@ -1,15 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Stripe.Checkout;
-using PayPalCheckoutSdk.Orders;
-using PayPalCheckoutSdk.Core;
-using CarRentalSystem.Data;
-using Microsoft.AspNetCore.Identity;
+﻿using CarRentalSystem.Data;
 using CarRentalSystem.Models;
-using System.Threading.Tasks;
-using System.Linq;
-using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using PayPalCheckoutSdk.Core;
+using PayPalCheckoutSdk.Orders;
+using Stripe.Checkout;
 
 public class PaymentController : Controller
 {

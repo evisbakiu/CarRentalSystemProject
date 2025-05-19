@@ -1,7 +1,6 @@
 ﻿using CarRentalSystem.Constants;
 using CarRentalSystem.Data;
 using CarRentalSystem.Models;
-using CarRentalSystem.Validators;
 using CarRentalSystem.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +13,7 @@ namespace CarRentalSystem.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly ApplicationDbContext _context;     
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
 
@@ -112,7 +111,7 @@ namespace CarRentalSystem.Controllers
 
                 return Json(monthlyData);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, new { error = "An error occurred while processing your request" });
             }
@@ -231,7 +230,7 @@ namespace CarRentalSystem.Controllers
                 {
                     MinDays = range.Min,
                     MaxDays = range.Max,
-                    PricePerDay = 0 
+                    PricePerDay = 0
                 });
             }
 
@@ -389,7 +388,6 @@ namespace CarRentalSystem.Controllers
         }
 
 
-
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -463,7 +461,7 @@ namespace CarRentalSystem.Controllers
 
         public async Task<IActionResult> GenerateReport()
         {
-            var userId = _userManager.GetUserId(User); 
+            var userId = _userManager.GetUserId(User);
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -477,7 +475,7 @@ namespace CarRentalSystem.Controllers
             {
                 DateGenerated = DateTime.Now,
                 ReportDetails = $"Total Reservations: {_context.Reservation.Count()}",
-                UserId = Guid.Parse(userId) ,
+                UserId = Guid.Parse(userId),
                 User = user
             };
 
@@ -490,7 +488,7 @@ namespace CarRentalSystem.Controllers
         [HttpPost]
         public IActionResult ChangeReservationStatus(Guid id)
         {
-            var reservation = _context.Reservation.Include(x=>x.Status).FirstOrDefault(r => r.Id == id);
+            var reservation = _context.Reservation.Include(x => x.Status).FirstOrDefault(r => r.Id == id);
             if (reservation == null)
             {
                 return Json(new { success = false, message = "Reservation not found." });

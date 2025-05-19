@@ -1,6 +1,5 @@
 ﻿using CarRentalSystem.Data;
 using CarRentalSystem.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,7 @@ namespace CarRentalSystem.Controllers
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public UserController(UserManager<User> userManager,ApplicationDbContext context)
+        public UserController(UserManager<User> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _context = context;
@@ -24,7 +23,6 @@ namespace CarRentalSystem.Controllers
             return View(users);
         }
 
-        //ADED PART II
         public async Task<IActionResult> Profile()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -155,7 +153,7 @@ namespace CarRentalSystem.Controllers
             var bookings = await _context.Reservation
                 .Where(r => r.UserId == user.Id)
                 .Include(r => r.Car)
-                .Include(x=>x.Status)
+                .Include(x => x.Status)
                 .OrderByDescending(r => r.StartDate)
                 .ToListAsync();
 

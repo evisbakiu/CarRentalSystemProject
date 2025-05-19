@@ -1,7 +1,6 @@
 ﻿using CarRentalSystem.Services.Interfaces;
 using CarRentalSystem.ViewModel;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace CarRentalSystem.Controllers
 {
@@ -24,7 +23,7 @@ namespace CarRentalSystem.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("Index", model); 
+                return View("Index", model);
             }
 
             var emailBody = $@"

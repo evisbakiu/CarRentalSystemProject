@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using CarRentalSystem.Data;
-using CarRentalSystem.Models;
+﻿using CarRentalSystem.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,21 +16,45 @@ public class HomeController : Controller
     {
         var cars = _context.Car.ToList();
 
-        var consentCookie = Request.Cookies["userConsent"];
-        bool isConsentGiven = consentCookie == "true";
+        var isConsentGiven = Request.Cookies["userConsent"] == "true";
+        ViewBag.ConsentGiven = isConsentGiven;
 
-        //ViewBag.ConsentGiven = isConsentGiven; TODO Check
-
-        var fullName = HttpContext.Session.GetString("FullName");
-        if (fullName != null)
+        if (isConsentGiven)
         {
-            ViewBag.FullName = fullName;
-            HttpContext.Session.Remove("FullName"); // fshihet pasi të shfaqet
+            var fullName = HttpContext.Session.GetString("FullName");
+
+            if (!string.IsNullOrEmpty(fullName))
+            {
+                Response.Cookies.Append("WelcomeName", fullName, new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddDays(1),
+                    IsEssential = true
+                });
+
+                HttpContext.Session.Remove("FullName");
+                ViewBag.ShowWelcome = true;
+                ViewBag.FullName = fullName;
+            }
+            else
+            {
+                var cookieName = Request.Cookies["WelcomeName"];
+                ViewBag.FullName = cookieName;
+                ViewBag.ShowWelcome = !string.IsNullOrEmpty(cookieName);
+            }
+        }
+        else
+        {
+            // No consent: don't personalize, don't show modal
+            Response.Cookies.Delete("WelcomeName");
+            ViewBag.ShowWelcome = false;
+            ViewBag.FullName = null;
         }
 
         return View(cars);
-    }    
-    
+    }
+
+
+
     public IActionResult Terms()
     {
         return View();

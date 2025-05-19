@@ -1,31 +1,43 @@
 ﻿@{
     ViewData["Title"] = "Home";
+    var showModal = ViewBag.ShowWelcome != null && (bool)ViewBag.ShowWelcome;
+    var fullName = ViewBag.FullName as string;
+    var nameFromCookie = Context.Request.Cookies["WelcomeName"];
 }
 
-@if (ViewBag.FullName != null)
+@if (showModal)
 {
-        <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-success text-white">
-                        <h5 class="modal-title" id="welcomeModalLabel">Welcome</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                           <strong>@ViewBag.FullName</strong>! Discover rental cars that match your preferences.
-
-                    </div>
+    <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="welcomeModalLabel">Welcome</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>@fullName</strong>, welcome back! Discover rental cars that match your preferences.
                 </div>
             </div>
         </div>
+    </div>
 
-        <script>
-            window.onload = function () {
-                var myModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
-                myModal.show();
-            };
-        </script>
+    <script>
+        window.onload = function () {
+            var myModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+            myModal.show();
+        };
+    </script>
 }
+
+@if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(nameFromCookie))
+{
+    <div class="alert alert-light alert-dismissible fade show border text-center mb-4 shadow-sm" role="alert">
+        👋 Welcome back, <strong>@nameFromCookie</strong>! Ready to hit the road again?
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+
 <!-- Full Width Search Form -->
 <div class="container-fluid py-5" style="background-color: #F8F9FA;">
     <div class="text-center mb-5">
@@ -88,9 +100,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-md-3" style="
-    margin-bottom: 40px;
-">
+        <div class="col-6 col-md-3">
             <div class="card shadow">
                 <img src="/images/cars/car-medium.jpg" class="card-img-top car-image" alt="Medium Car">
                 <div class="card-body text-center">
@@ -100,9 +110,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-md-3" style="
-    margin-bottom: 40px;
-">
+        <div class="col-6 col-md-3">
             <div class="card shadow">
                 <img src="/images/cars/car-large.jpg" class="card-img-top car-image" alt="Large Car">
                 <div class="card-body text-center">
@@ -112,9 +120,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-md-3" style="
-    margin-bottom: 40px;
-">
+        <div class="col-6 col-md-3">
             <div class="card shadow">
                 <img src="/images/cars/car-luxury.jpg" class="card-img-top car-image" alt="Luxury Car">
                 <div class="card-body text-center">
@@ -128,14 +134,12 @@
 </div>
 
 <style>
-    /* Image Styling */
     .car-image {
-        height: 150px; /* Unified height */
+        height: 150px;
         object-fit: cover;
         border-radius: 4px;
     }
 
-    /* Button Styling */
     .btn-orange {
         background-color: #FFA500;
         color: white;
@@ -147,7 +151,6 @@
             background-color: #FF8C00;
         }
 
-    /* Section Icons */
     .text-orange {
         color: #FFA500;
     }
@@ -156,7 +159,6 @@
         font-size: 2rem;
     }
 
-    /* Add spacing and color balance */
     .container-fluid {
         padding: 20px;
     }

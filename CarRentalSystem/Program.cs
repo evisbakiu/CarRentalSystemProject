@@ -29,8 +29,19 @@ var localizationOptions = new RequestLocalizationOptions
 };
 
 
+builder.Services.AddControllersWithViews(); // For MVC
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers() // For API
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
@@ -128,6 +139,16 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "CarRentalSystem API V1");
+        c.RoutePrefix = "swagger"; // Loads at /swagger
+    });
+}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -148,5 +169,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllers();
 
 app.Run();

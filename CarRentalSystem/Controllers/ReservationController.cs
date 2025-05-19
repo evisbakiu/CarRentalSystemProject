@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CarRentalSystem.Data;
+using CarRentalSystem.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CarRentalSystem.Models;
-using CarRentalSystem.Data;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace CarRentalSystem.Controllers
 {
@@ -161,7 +160,7 @@ namespace CarRentalSystem.Controllers
             }
 
             bool isReserved = car.Reservations.Any(r =>
-                (pickUpDateTime < r.EndDate && returnDateTime > r.StartDate));
+                pickUpDateTime < r.EndDate && returnDateTime > r.StartDate);
 
             if (isReserved)
             {
