@@ -14,7 +14,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var cars = _context.Car.ToList();
+        var cars = _context!.Car!.ToList();
 
         var isConsentGiven = Request.Cookies["userConsent"] == "true";
         ViewBag.ConsentGiven = isConsentGiven;
@@ -53,8 +53,6 @@ public class HomeController : Controller
         return View(cars);
     }
 
-
-
     public IActionResult Terms()
     {
         return View();
@@ -73,8 +71,8 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Search(DateTime pickUpDate, DateTime dropOffDate)
     {
-        var availableCars = _context.Car
-            .Where(car => !_context.Reservation
+        var availableCars = _context!.Car!
+            .Where(car => !_context!.Reservation!
                 .Any(reservation =>
                     reservation.CarId == car.Id &&
                     ((pickUpDate >= reservation.StartDate && pickUpDate <= reservation.EndDate) ||
@@ -87,7 +85,7 @@ public class HomeController : Controller
 
     public IActionResult Details(Guid id)
     {
-        var car = _context.Car.Include(c => c.Category).FirstOrDefault(c => c.Id == id);
+        var car = _context!.Car!.Include(c => c.Category).FirstOrDefault(c => c.Id == id);
         if (car == null) return NotFound();
 
         return View(car);

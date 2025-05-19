@@ -34,7 +34,7 @@ namespace CarRentalSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Rent(Guid id)
         {
-            var car = await _context.Car.FirstOrDefaultAsync(c => c.Id == id && c.IsAvailable);
+            var car = await _context!.Car!.FirstOrDefaultAsync(c => c.Id == id && c.IsAvailable);
 
             if (car == null)
                 return NotFound("Car not found or is already booked.");
@@ -52,7 +52,7 @@ namespace CarRentalSystem.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var car = await _context.Car.FindAsync(carId);
+            var car = await _context!.Car!.FindAsync(carId);
             if (car == null || !car.IsAvailable)
             {
                 ModelState.AddModelError("", "The selected car is not available.");
@@ -72,14 +72,14 @@ namespace CarRentalSystem.Controllers
                 StartDate = pickUpDateTime,
                 EndDate = returnDateTime,
                 TotalCost = (returnDateTime - pickUpDateTime).Days * car.PricePerDay,
-                StatusId = _context.Status.First(s => s.Name == "Pending").Id
+                StatusId = _context!.Status!.First(s => s.Name == "Pending").Id
             };
 
             // Mark the car as unavailable
             car.IsAvailable = false;
 
             // Save the reservation
-            _context.Reservation.Add(reservation);
+            _context!.Reservation!.Add(reservation);
             await _context.SaveChangesAsync();
 
             TempData["Success"] = "Your booking has been successfully created!";
@@ -101,7 +101,7 @@ namespace CarRentalSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> ReviewReservation(Guid carId, DateTime pickUpDateTime, DateTime returnDateTime)
         {
-            var car = await _context.Car
+            var car = await _context.Car!
                 .Include(c => c.Class)
                 .Include(c => c.PricingTiers)
                 .FirstOrDefaultAsync(c => c.Id == carId);
@@ -120,7 +120,7 @@ namespace CarRentalSystem.Controllers
 
             var rentalDays = (returnDateTime - pickUpDateTime).Days;
 
-            var applicableTier = car.PricingTiers.FirstOrDefault(t => rentalDays >= t.MinDays && rentalDays <= t.MaxDays);
+            var applicableTier = car!.PricingTiers!.FirstOrDefault(t => rentalDays >= t.MinDays && rentalDays <= t.MaxDays);
             if (applicableTier == null)
             {
                 TempData["Error"] = "No pricing tier is available for the selected rental period.";
@@ -132,9 +132,9 @@ namespace CarRentalSystem.Controllers
                 CarId = car.Id, // Ensure CarId is set
                 UserName = user.UserName,
                 UserEmail = user.Email,
-                CarName = car.Name,
-                CarClass = car.Class?.Name,
-                FuelType = car.FuelType,
+                CarName = car!.Name!,
+                CarClass = car!.Class?.Name!,
+                FuelType = car.FuelType!,
                 Gearbox = car.Gearbox,
                 PricePerDay = applicableTier.PricePerDay,
                 TotalCost = rentalDays * applicableTier.PricePerDay,
@@ -148,7 +148,7 @@ namespace CarRentalSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> ConfirmReservation(Guid carId, DateTime pickUpDateTime, DateTime returnDateTime)
         {
-            var car = await _context.Car
+            var car = await _context!.Car!
                 .Include(c => c.Reservations)
                 .Include(c => c.PricingTiers)
                 .FirstOrDefaultAsync(c => c.Id == carId);
@@ -159,7 +159,7 @@ namespace CarRentalSystem.Controllers
                 return RedirectToAction("ReviewReservation", new { carId, pickUpDateTime, returnDateTime });
             }
 
-            bool isReserved = car.Reservations.Any(r =>
+            bool isReserved = car!.Reservations!.Any(r =>
                 pickUpDateTime < r.EndDate && returnDateTime > r.StartDate);
 
             if (isReserved)
@@ -177,7 +177,7 @@ namespace CarRentalSystem.Controllers
 
             // Calculate rental days and find applicable pricing tier
             var rentalDays = (returnDateTime - pickUpDateTime).Days;
-            var applicableTier = car.PricingTiers.FirstOrDefault(t => rentalDays >= t.MinDays && rentalDays <= t.MaxDays);
+            var applicableTier = car!.PricingTiers!.FirstOrDefault(t => rentalDays >= t.MinDays && rentalDays <= t.MaxDays);
 
             if (applicableTier == null)
             {
@@ -191,17 +191,17 @@ namespace CarRentalSystem.Controllers
             // Redirect to payment page instead of creating the reservation
             return RedirectToAction("ChoosePaymentMethod", "Payment", new
             {
-                carId = carId,
+                carId,
                 pickup = pickUpDateTime,
                 returndate = returnDateTime,
-                totalCost = totalCost
+                totalCost
             });
         }
 
         public async Task<IActionResult> Details(Guid id)
         {
-            var reservation = await _context.Reservation
-                .Include(r => r.Car).ThenInclude(x => x.Class)
+            var reservation = await _context!.Reservation!
+                .Include(r => r.Car).ThenInclude(x => x!.Class!)
                 .Include(r => r.Status)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
