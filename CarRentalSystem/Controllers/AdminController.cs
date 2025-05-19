@@ -32,35 +32,38 @@ namespace CarRentalSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> GetReservationDetails(DateTime? startDate, DateTime? endDate)
         {
-            // Default to current month if no dates provided
             if (!startDate.HasValue)
                 startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
             if (!endDate.HasValue)
                 endDate = startDate.Value.AddMonths(1).AddDays(-1);
 
-            var reservations = await _context.Reservation
+            var start = startDate.Value.Date;
+            var end = endDate.Value.Date.AddDays(1).AddTicks(-1);
+
+            var reservations = await _context!.Reservation!
                 .Include(r => r.Car)
                 .Include(r => r.User)
                 .Include(r => r.Status)
-                .Where(r => r.StartDate >= startDate && r.EndDate <= endDate)
+                .Where(r => r.StartDate >= start && r.EndDate <= end)
                 .Select(r => new
                 {
                     id = r.Id,
-                    carName = r.Car.Name,
-                    carLicensePlate = r.Car.LicensePlate,
-                    userName = r.User.FullName,
-                    userEmail = r.User.Email,
+                    carName = r.Car != null ? r.Car.Name : null,
+                    carLicensePlate = r.Car != null ? r.Car.LicensePlate : null,
+                    userName = r.User != null ? r.User.FullName : null,
+                    userEmail = r.User != null ? r.User.Email : null,
                     startDate = r.StartDate,
                     endDate = r.EndDate,
                     totalCost = r.TotalCost,
-                    status = r.Status.Name,
-                    durationDays = (r.EndDate - r.StartDate).Days
+                    status = r.Status != null ? r.Status.Name : null,
+                    durationDays = EF.Functions.DateDiffDay(r.StartDate, r.EndDate)
                 })
                 .ToListAsync();
 
             return Json(new { data = reservations });
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetFuelTypeDistribution()

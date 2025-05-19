@@ -23,6 +23,13 @@ function formatDate(dateString) {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
+function toISODateString(input) {
+    if (!input) return "";
+    const date = new Date(input);
+    if (isNaN(date)) return "";
+    return date.toISOString().split('T')[0];
+}
+
 function setDefaultDateRange() {
     const today = new Date();
     const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -35,8 +42,22 @@ let reservationsChart = null;
 let fuelTypeChart = null;
 
 function loadDashboardData() {
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
+    let startRaw = document.getElementById('startDate').value;
+    let endRaw = document.getElementById('endDate').value;
+
+    let startDate = toISODateString(startRaw);
+    let endDate = toISODateString(endRaw);
+
+    if (!startDate || !endDate) {
+        console.warn("Invalid or missing date inputs:", { startRaw, endRaw });
+        return;
+    }
+
+    if (new Date(startDate) > new Date(endDate)) {
+        [startDate, endDate] = [endDate, startDate]; // swap
+    }
+
+    console.log("Formatted & validated dates:", { startDate, endDate });
 
     // 🔹 Load reservation details
     fetch(`/Admin/GetReservationDetails?startDate=${startDate}&endDate=${endDate}`)
@@ -48,28 +69,32 @@ function loadDashboardData() {
             const tbody = document.querySelector('#reservationsTable tbody');
             tbody.innerHTML = '';
 
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center text-muted">No reservations found.</td></tr>`;
+                return;
+            }
+
             data.forEach(r => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-        <td>${r.id}</td>
-        <td>${r.carName?.$value || r.carName || '-'}</td>
-        <td>${r.carLicensePlate?.$value || r.carLicensePlate || '-'}</td>
-        <td>${r.userName?.$value || r.userName || '-'}</td>
-        <td>${r.userEmail?.$value || r.userEmail || '-'}</td>
-        <td>${formatDate(r.startDate)}</td>
-        <td>${formatDate(r.endDate)}</td>
-        <td>${r.durationDays} days</td>
-        <td>${formatCurrency(r.totalCost)}</td>
-        <td>
-            <span class="badge ${r.status?.$value === 'Completed' ? 'bg-success' :
+                    <td>${r.id}</td>
+                    <td>${r.carName?.$value || r.carName || '-'}</td>
+                    <td>${r.carLicensePlate?.$value || r.carLicensePlate || '-'}</td>
+                    <td>${r.userName?.$value || r.userName || '-'}</td>
+                    <td>${r.userEmail?.$value || r.userEmail || '-'}</td>
+                    <td>${formatDate(r.startDate)}</td>
+                    <td>${formatDate(r.endDate)}</td>
+                    <td>${r.durationDays} days</td>
+                    <td>${formatCurrency(r.totalCost)}</td>
+                    <td>
+                        <span class="badge ${r.status?.$value === 'Completed' ? 'bg-success' :
                         r.status?.$value === 'Cancelled' ? 'bg-danger' : 'bg-warning'}">
-                ${r.status?.$value || r.status || '-'}
-            </span>
-        </td>
-    `;
+                            ${r.status?.$value || r.status || '-'}
+                        </span>
+                    </td>
+                `;
                 tbody.appendChild(row);
             });
-
         });
 
     // 🔹 Load car availability
