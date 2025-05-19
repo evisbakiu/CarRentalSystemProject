@@ -1,0 +1,33 @@
+﻿@model CarRentalSystem.Models.User
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4">My Profile</h2>
+
+    @if (ViewBag.Success == true)
+    {
+        <div class="alert alert-success">Profile updated successfully!</div>
+    }
+
+    <form asp-action="Profile" method="post">
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input asp-for="FullName" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" readonly />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input asp-for="PhoneNumber" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Date of Birth</label>
+            <input asp-for="DateOfBirth" class="form-control" type="date" />
+        </div>
+        <button type="submit" class="btn btn-orange">Save Changes</button>
+    </form>
+</div>

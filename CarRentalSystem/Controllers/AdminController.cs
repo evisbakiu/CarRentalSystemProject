@@ -16,11 +16,13 @@ namespace CarRentalSystem.Controllers
     {
         private readonly ApplicationDbContext _context;     
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
 
-        public AdminController(ApplicationDbContext context, UserManager<User> userManager)
+        public AdminController(ApplicationDbContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public IActionResult Index()
@@ -244,19 +246,40 @@ namespace CarRentalSystem.Controllers
         #endregion
 
         #region Manage Users
-        public async Task<IActionResult> Users()
+        public async Task<IActionResult> Users(string roleFilter, string emailSearch)
         {
-            var users = await _userManager.Users.ToListAsync();
+            var usersQuery = _userManager.Users.AsQueryable();
 
-            var model = users.Select(user => new ManageUserViewModel
+            if (!string.IsNullOrEmpty(emailSearch))
             {
-                UserId = user.Id,
-                Email = user.Email,
-                Username = user.UserName,
-                PhoneNumber = user.PhoneNumber,
-                Fullname = user.FullName, 
-                DateOfBirth = user.DateOfBirth 
-            }).ToList();
+                usersQuery = usersQuery.Where(u => u.Email.Contains(emailSearch));
+            }
+
+            var allUsers = await usersQuery.ToListAsync();
+            var model = new List<ManageUserViewModel>();
+
+            foreach (var user in allUsers)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                if (!string.IsNullOrEmpty(roleFilter) && !roles.Contains(roleFilter))
+                    continue;
+
+                model.Add(new ManageUserViewModel
+                {
+                    UserId = user.Id,
+                    Email = user.Email,
+                    Username = user.UserName,
+                    PhoneNumber = user.PhoneNumber,
+                    Fullname = user.FullName,
+                    DateOfBirth = user.DateOfBirth,
+                    Roles = roles.ToList()
+                });
+            }
+
+            ViewBag.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+            ViewBag.RoleFilter = roleFilter;
+            ViewBag.EmailSearch = emailSearch;
 
             return View(model);
         }
@@ -272,6 +295,59 @@ namespace CarRentalSystem.Controllers
             }
             return RedirectToAction("Users");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return NotFound();
+
+            var allRoles = _roleManager.Roles.Select(r => r.Name).ToList();
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var model = new EditUserViewModel
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                FullName = user.FullName,
+                PhoneNumber = user.PhoneNumber,
+                DateOfBirth = user.DateOfBirth,
+                Roles = allRoles.Select(role => new RoleSelectionViewModel
+                {
+                    RoleName = role,
+                    IsSelected = userRoles.Contains(role)
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null) return NotFound();
+
+            // Update profile info
+            user.FullName = model.FullName;
+            user.PhoneNumber = model.PhoneNumber;
+            user.DateOfBirth = model.DateOfBirth;
+
+            await _userManager.UpdateAsync(user);
+
+            // Update roles
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            var selectedRoles = model.Roles.Where(r => r.IsSelected).Select(r => r.RoleName);
+
+            var rolesToAdd = selectedRoles.Except(currentRoles);
+            var rolesToRemove = currentRoles.Except(selectedRoles);
+
+            await _userManager.AddToRolesAsync(user, rolesToAdd);
+            await _userManager.RemoveFromRolesAsync(user, rolesToRemove);
+
+            return RedirectToAction("Users");
+        }
+
         #endregion
 
         #region Manage Reports
