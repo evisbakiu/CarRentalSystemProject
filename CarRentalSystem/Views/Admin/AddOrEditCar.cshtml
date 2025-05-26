@@ -45,8 +45,10 @@
                     <option value="" disabled>Select a category</option>
                     @foreach (var category in ViewBag.Categories as List<CarRentalSystem.Models.Category>)
                     {
-                        <option value="@category.Id" @@(category.Id == Model.CategoryId ? "selected" : "")>@category.Name</option>
-                    }
+
+    var selected = category.Id == Model.CategoryId ? "selected" : "";
+
+<option value="@category.Id" selected>@category.Name</option>                    }
                 </select>
             </div>
 
@@ -56,8 +58,10 @@
                     <option value="" disabled>Select a class</option>
                     @foreach (var carClass in ViewBag.Classes as List<CarRentalSystem.Models.CarClass>)
                     {
-                        <option value="@carClass.Id" @@(carClass.Id == Model.ClassId ? "selected" : "")>@carClass.Name</option>
-                    }
+
+    var selected = carClass.Id == Model.ClassId ? "selected" : "";
+
+<option value="@carClass.Id" selected>@carClass.Name</option>                    }
                 </select>
             </div>
 
@@ -94,14 +98,8 @@
                             </tr>
                         }
                     </tbody>
-
                 </table>
             </div>
-
-
-
-
-
 
             <div class="d-flex justify-content-end mt-4">
                 <button type="submit" class="btn btn-success px-4 me-2">Save</button>
@@ -110,7 +108,7 @@
         </form>
     </div>
 </div>
-</
+</html>
 
 <style>
     body {

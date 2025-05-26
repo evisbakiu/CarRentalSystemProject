@@ -80,7 +80,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
 
 builder.Services.AddIdentity<User, Role>(options =>
 {
@@ -98,23 +101,23 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
-.AddCookie()
-.AddGoogle(googleOptions =>
-{
-    googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-})
-.AddFacebook(facebookOptions =>
-{
-    facebookOptions.AppId = builder.Configuration["Authentication:Facebook:AppId"];
-    facebookOptions.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+.AddCookie();
+//.AddGoogle(googleOptions =>
+//{
+//    googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+//    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+//})
+//.AddFacebook(facebookOptions =>
+//{
+//    facebookOptions.AppId = builder.Configuration["Authentication:Facebook:AppId"];
+//    facebookOptions.AppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
    
-})
-.AddTwitter(twitterOptions =>
-{
-    twitterOptions.ConsumerKey = builder.Configuration["Authentication:Twitter:ConsumerKey"];
-    twitterOptions.ConsumerSecret = builder.Configuration["Authentication:Twitter:ConsumerSecret"];
-});
+//})
+//.AddTwitter(twitterOptions =>
+//{
+//    twitterOptions.ConsumerKey = builder.Configuration["Authentication:Twitter:ConsumerKey"];
+//    twitterOptions.ConsumerSecret = builder.Configuration["Authentication:Twitter:ConsumerSecret"];
+//});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -130,7 +133,7 @@ app.UseRequestLocalization(localizationOptions);
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-   //await SeedData.SeedDataForTheSystem(services);
+    await SeedData.SeedDataForTheSystem(services);
 }
 
 if (!app.Environment.IsDevelopment())

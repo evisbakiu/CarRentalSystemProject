@@ -1,29 +1,20 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-
-# This stage is used to build the service project
+# Stage 1: Build the application
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["CarRentalSystem/CarRentalSystem.csproj", "CarRentalSystem/"]
-RUN dotnet restore "./CarRentalSystem/CarRentalSystem.csproj"
-COPY . .
-WORKDIR "/src/CarRentalSystem"
-RUN dotnet build "./CarRentalSystem.csproj" -c $BUILD_CONFIGURATION -o /app/build
-
-# This stage is used to publish the service project to be copied to the final stage
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./CarRentalSystem.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Copy everything into the container
+COPY . ./
+
+# Restore dependencies and publish
+RUN dotnet restore CarRentalSystem.csproj
+RUN dotnet publish CarRentalSystem.csproj -c Release -o /out
+
+# Stage 2: Run the application
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+WORKDIR /app
+
+# Copy the published output from build stage
+COPY --from=build /out .
+
+# Set the entry point to the built DLL
 ENTRYPOINT ["dotnet", "CarRentalSystem.dll"]

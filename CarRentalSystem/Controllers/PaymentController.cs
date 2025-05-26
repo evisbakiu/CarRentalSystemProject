@@ -6,6 +6,7 @@ using PayPalCheckoutSdk.Core;
 using PayPalCheckoutSdk.Orders;
 using Stripe.Checkout;
 using System.Globalization;
+using System.Text;
 
 
 public class PaymentController : Controller
@@ -79,18 +80,18 @@ public class PaymentController : Controller
         {
             CheckoutPaymentIntent = "CAPTURE",
             PurchaseUnits = new List<PurchaseUnitRequest>
+        {
+            new PurchaseUnitRequest
             {
-                new PurchaseUnitRequest
+                ReferenceId = carId.ToString(),
+                Description = "Car Rental Reservation",
+                AmountWithBreakdown = new AmountWithBreakdown
                 {
-                    ReferenceId = carId.ToString(),
-                    Description = "Car Rental Reservation",
-                    AmountWithBreakdown = new AmountWithBreakdown
-                    {
-                        CurrencyCode = "EUR",
-                        Value = totalCost.ToString("F2", CultureInfo.InvariantCulture)
-                    }
+                    CurrencyCode = "EUR",
+                    Value = totalCost.ToString("F2", CultureInfo.InvariantCulture)
                 }
-            },
+            }
+        },
             ApplicationContext = new ApplicationContext
             {
                 ReturnUrl = $"{domain}/Payment/PayPalSuccess?carId={carId}&pickup={pickUpDateTime:s}&returndate={returnDateTime:s}",
@@ -117,12 +118,25 @@ public class PaymentController : Controller
             TempData["Error"] = "Could not get PayPal approval link.";
             return RedirectToAction("PaymentFailed", new { carId, pickup = pickUpDateTime, returndate = returnDateTime });
         }
+        catch (PayPalHttp.HttpException ex)
+        {
+            var statusCode = ex.StatusCode;
+            var errorMessage = ex.Message; 
+
+            Console.WriteLine($"PayPal HTTP Error {statusCode}:");
+            Console.WriteLine(errorMessage);
+
+            TempData["Error"] = $"PayPal API Error ({statusCode}): {errorMessage}";
+            return RedirectToAction("PaymentFailed", new { carId, pickup = pickUpDateTime, returndate = returnDateTime });
+        }
+
         catch (Exception ex)
         {
-            TempData["Error"] = $"PayPal payment error: {ex.Message}";
+            TempData["Error"] = $"Unexpected PayPal error: {ex.Message}";
             return RedirectToAction("PaymentFailed", new { carId, pickup = pickUpDateTime, returndate = returnDateTime });
         }
     }
+
 
     public async Task<IActionResult> PayPalSuccess(Guid carId, DateTime pickup, DateTime returndate, string token)
     {
@@ -137,6 +151,8 @@ public class PaymentController : Controller
 
         try
         {
+            Console.WriteLine($"[PayPal Capture] Token = {token}");
+
             var response = await _payPalClient.Execute(request);
             var result = response.Result<Order>();
 
@@ -181,9 +197,17 @@ public class PaymentController : Controller
             TempData["Error"] = $"PayPal returned unexpected status: {result.Status}";
             return RedirectToAction("PaymentFailed", new { carId, pickup, returndate });
         }
+        catch (PayPalHttp.HttpException ex)
+        {
+            var message = ex.Message;
+            TempData["Error"] = $"PayPal capture API error: {message}";
+            Console.WriteLine("💥 PayPal Capture Error:");
+            Console.WriteLine(message);
+            return RedirectToAction("PaymentFailed", new { carId, pickup, returndate });
+        }
         catch (Exception ex)
         {
-            TempData["Error"] = $"PayPal capture error: {ex.Message}";
+            TempData["Error"] = $"Unexpected capture error: {ex.Message}";
             return RedirectToAction("PaymentFailed", new { carId, pickup, returndate });
         }
     }
